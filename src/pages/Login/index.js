@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container , Form , Button , InputGroup } from 'react-bootstrap'
 import { useHistory } from 'react-router'
-import { FaBeer } from 'react-icons/fa';
 
 const Login = () => {
     const history = useHistory();
@@ -42,7 +41,7 @@ const Login = () => {
 
 
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Text className="">
+                                    <Form.Text onClick={() => history.push('/forgotpass')} style={{cursor: 'pointer'}}>
                                         Forgot Password ?.
                                     </Form.Text>
                                 </Form.Group>
