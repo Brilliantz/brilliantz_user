@@ -1,12 +1,13 @@
 import React from 'react'
-import { Container , Navbar } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
 import Logo from "./Logo";
+import styled from "styled-components";
 
 const Navbars = () => {
     return (
         <>
-            <Navbar style={{height: '80px'}}>
-                <Container>
+            <Navbar style={{height: '80px'}} className="border">
+                <CustomContainer>
                     <Navbar.Brand href="#home">
                         <Logo />
                     </Navbar.Brand>
@@ -16,10 +17,15 @@ const Navbars = () => {
                             {/* Signed in as: <a href="#login">Mark Otto</a> */}
                         </Navbar.Text>
                     </Navbar.Collapse>
-                </Container>
+                </CustomContainer>
             </Navbar>
         </>
     )
 }
+
+const CustomContainer = styled.div`
+    width: 95%;
+    margin: auto;
+`;
 
 export default Navbars

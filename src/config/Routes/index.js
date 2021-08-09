@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
-import {Login} from "../../pages";
+import {Login , Register , Dashboard} from "../../pages";
 
 const Routes = () => {
     return (
@@ -8,6 +8,12 @@ const Routes = () => {
             <Switch>
                 <Route exact path="/login">
                     <Login />
+                </Route>
+                <Route exact path="/register">
+                    <Register />
+                </Route>
+                <Route exact path="/dashboard">
+                    <Dashboard />
                 </Route>
             </Switch>
         </Router>
