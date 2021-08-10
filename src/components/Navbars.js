@@ -6,7 +6,7 @@ import styled from "styled-components";
 const Navbars = () => {
     return (
         <>
-            <Navbar style={{height: '80px'}} className="border">
+            <Navbar style={{height: '80px' , backgroundColor: 'white'}} className="border" fixed="top" expand="lg">
                 <CustomContainer>
                     <Navbar.Brand href="#home">
                         <Logo />

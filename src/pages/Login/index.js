@@ -41,7 +41,7 @@ const Login = () => {
 
 
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Text onClick={() => history.push('/forgotpass')} style={{cursor: 'pointer'}}>
+                                    <Form.Text onClick={() => history.push('/forgot-pass')} style={{cursor: 'pointer'}}>
                                         Forgot Password ?.
                                     </Form.Text>
                                 </Form.Group>

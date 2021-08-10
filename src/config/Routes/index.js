@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
-import {Login , Register , ForgotPassword , Dashboard} from "../../pages";
+import {Login , Register , ForgotPassword , CompleteProfile , Dashboard} from "../../pages";
 
 const Routes = () => {
     return (
@@ -12,8 +12,11 @@ const Routes = () => {
                 <Route exact path="/register">
                     <Register />
                 </Route>
-                <Route exact path="/forgotpass">
+                <Route exact path="/forgot-pass">
                     <ForgotPassword />
+                </Route>
+                <Route exact path="/complete-profile">
+                    <CompleteProfile />
                 </Route>
                 <Route exact path="/dashboard">
                     <Dashboard />
