@@ -1,11 +1,21 @@
 import React from 'react'
-import {Home , About} from "./LocalComponents";
+import {DashboardView , NilaiTryout , Ranking , Profil} from "./LocalComponents";
 import style from "./Dashboard.module.css";
-import { DashboardIcon , Logo } from '../../components';
+import { DashboardIcon , Logo , NilaiTryoutIcon , RankingIcon , ProfilIcon} from '../../components';
 import styled from 'styled-components';
-import { Breadcrumb , Button} from 'react-bootstrap';
+import {
+    BrowserRouter as Router, 
+    Link, 
+    Route, 
+    Switch , 
+    useParams, 
+    useHistory, 
+    useRouteMatch
+} from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({size}) => {
+    let {path , url} = useRouteMatch();
+    const history = useHistory();
     return (
         <div style={{
             backgroundColor: '#F8F8F8',
@@ -14,60 +24,86 @@ const Dashboard = () => {
             left: '0',
             right: '0',
             bottom: '0',
+            overflow: 'auto',
         }}>
-            {/* sidebar */}
-            <div className={style.side_menu}>
-                <ul className={style.side_menu_items}>
-                    <li className="d-flex align-items-center" style={{marginBottom: '20px' , height: '80px' , padding: '0 0 0 10px'}}>
-                        <span className={`${style.text} ${style.text_logo}`}>
-                            <Logo />
-                        </span>
-                    </li>
-                    <li className={style.list}>
-                        <a className={`${style.text} ${style.text_link}`}>
-                            <DashboardIcon />
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li className={style.list}>
-                        <a className={`${style.text} ${style.text_link}`}>
-                            <DashboardIcon />
-                            <span>About</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <Router>
 
-            <div className={`${style.content} h-100`}>
-                {/* nav */}
-                <div className={`${style.nav} ${style.content_position}`} style={{border: '2px solid #DADCE0'}}>
-                    <CustomContainer className="d-flex justify-content-end h-100">
-                        <div className="account d-flex align-items-center justify-content-end">
-                            <div style={{width: '32px' , height: '32px' , backgroundColor: '#FFB332' , borderRadius: '50%'}}></div>
-                            <span>Muhammad Ridlo</span>
-                        </div>
-                    </CustomContainer>
+                {/* sidebar */}
+                <div className={style.side_menu}>
+                    <ul className={style.side_menu_items}>
+                        <li className="d-flex align-items-center" style={{marginBottom: '20px' , height: '80px' , padding: '0 0 0 10px'}} onClick={() => history.push('/')}>
+                            <span className={`${style.text} ${style.text_logo}`}>
+                                <Logo />
+                            </span>
+                        </li>
+                        <List icon={DashboardIcon} title="Dashboard" path="/dashboard" />
+                        <List icon={NilaiTryoutIcon} title="Nilai TryOut" path={`${url}/nilai-tryout`} />
+                        <List icon={RankingIcon} title="Ranking" path={`${url}/ranking`} />
+                        <List icon={ProfilIcon} title="Profil" path={`${url}/profil`} />
+                    </ul>
                 </div>
 
-                {/* content  */}
-                <div className={`${style.content_position} ${style.contens}`}>
-                    <CustomContainer>
-                        <Breadcrumb style={{marginTop: '1rem'}} className={style.breadcrumb}>
-                            <Breadcrumb.Item href="#">PROFIL</Breadcrumb.Item>
-                        </Breadcrumb>
+                <div className={`${style.content} h-100`}>
+                    {/* nav */}
+                    <div className={`${style.nav} ${style.content_position}`} style={{border: '2px solid #DADCE0'}}>
+                        <CustomContainer className="d-flex justify-content-end h-100">
+                            <div className="account d-flex align-items-center justify-content-end">
+                                <div style={{width: '32px' , height: '32px' , backgroundColor: '#FFB332' , borderRadius: '50%'}}></div>
+                                <span>Muhammad Ridlo</span>
+                            </div>
+                        </CustomContainer>
+                    </div>
 
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h1 style={{fontSize: '32px'}}>Profil</h1>
-                            <Button variant="outline-danger" className="rounded" style={{width: '156px' , height: '40px'}}>Keluar dari Akun</Button>
-                        </div>
-
-
-                        <div style={{width: '100%' , height: '496px' , backgroundColor: 'white' , borderRadius: '8px'}}></div>
-
-                    </CustomContainer>
+                    {/* content  */}
+                    <div className={`${style.content_position} ${style.contens}`}>
+                        <CustomContainer>
+                            {/* <Profil /> */}
+                            <Switch>
+                                <Route exact path={path}>
+                                    <DashboardView />
+                                </Route>
+                                <Route exact path={`${path}/:choose`}>
+                                    <Content size={size} />
+                                </Route>
+                            </Switch>
+                        </CustomContainer>
+                    </div>
                 </div>
-            </div>
+            </Router>
         </div>
+    )
+}
+
+const Content = ({size}) => {
+    let {choose} = useParams();
+    return (
+        <div>
+            {
+                choose === "nilai-tryout" ? (
+                    <NilaiTryout />
+                ) : choose === "ranking" ? (
+                    <Ranking />
+                ) : choose === "profil" ? (
+                    <Profil size={size} />
+                ) : (
+                    <span>Choose</span>
+                )
+            }
+        </div>
+    )
+}
+
+const List = ({icon , title , path}) => {
+    const Icon = icon;
+    return (
+        <>
+            <li className={style.list}>
+                <Link to={path} className={`${style.text} ${style.text_link}`}>
+                    <Icon />
+                    <span>{title}</span>
+                </Link>
+            </li>
+        </>
     )
 }
 

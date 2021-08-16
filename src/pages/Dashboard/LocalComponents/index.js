@@ -1,4 +1,6 @@
-import Home from "./Home";
-import About from "./About";
+import DashboardView from "./DashboardView";
+import NilaiTryout from "./NilaiTryout";
+import Ranking from "./Ranking";
+import Profil from "./Profil";
 
-export {Home , About};
+export {DashboardView , NilaiTryout , Ranking , Profil};

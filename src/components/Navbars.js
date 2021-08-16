@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import styled from "styled-components";
 
 const Navbars = () => {
+    console.log(window.location.pathname);
 
     return (
         <>

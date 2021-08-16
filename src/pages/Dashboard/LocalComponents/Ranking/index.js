@@ -1,11 +1,11 @@
 import React from 'react'
 
-const About = () => {
+const Ranking = () => {
     return (
         <div>
-            About
+            Ranking
         </div>
     )
 }
 
-export default About
+export default Ranking

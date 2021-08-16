@@ -1,20 +1,24 @@
 import React from 'react'
-import {Button , Form} from "react-bootstrap";
+import { Breadcrumb , Button , Form} from 'react-bootstrap'
+import style from "../../Dashboard.module.css";
+import {LeftArrow} from "../../../../components/Icons"; 
 
-const FormComp = ({success , handleSuccess}) => {
-    // nilai success false
-
-    const changeSuccess = () => {
-        success = true;
-        handleSuccess(success)
-    }
-
+const EditProfil = ({editProfil , handleBack}) => {
     return (
-        <div style={{height: '935px' , width: '635px'}} className="mt-4">
-            <h1 style={{fontSize: '32px'}}>Lengkapi Profil</h1>
-            <Form className="d-flex justify-content-between mt-3">
+        <>
+            <Breadcrumb style={{marginTop: '1rem'}} className={style.breadcrumb}>
+                <Breadcrumb.Item >PROFIL</Breadcrumb.Item>
+                <Breadcrumb.Item href="#">EDIT PROFIL</Breadcrumb.Item>
+            </Breadcrumb>
+
+            <div className="d-flex align-items-center mb-3" style={{width: '688px'}}>
+                <Button variant="light" className="rounded" onClick={() => handleBack(false)}><LeftArrow /></Button>
+                <h1 style={{fontSize: '32px' , marginLeft: '20px'}}>Edit Profil</h1>
+            </div>
+
+            <Form className="d-flex justify-content-between mt-3 p-4 rounded" style={{width: '688px' , backgroundColor: '#fff'}}>
                 <div className="d-flex flex-column" style={{width: '35%'}}>
-                    <img src="https://jdihn.jenepontokab.go.id/images/user/no-image.png" alt="profil-preview" style={{height: '200px'}} className="w-100 border rounded"/>
+                    <img src="https://jdihn.jenepontokab.go.id/images/user/no-image.png" alt="profil-preview" style={{height: '200px' , borderRadius: '8px'}} className="w-100"/>
                     <Button variant="outline-secondary" className="my-3 w-100">Pilih Foto</Button>{' '}
                     <p style={{fontSize: '12px'}}>Gunakan foto dengan format .JPG , .PNG , .JPEG dengan ukuran file maksimal 3 MB</p>
                 </div>
@@ -27,11 +31,12 @@ const FormComp = ({success , handleSuccess}) => {
                     <Select label="Kota / Kabupaten" defaultValue="Pilih kota / kabupaten" data="Surabaya" />
                     <Select label="Jurusan Impian" defaultValue="Pilih jurusan impian" data="Informatika" />
                     <Input text="No HP / Whatsapp" type="text" />
-                    <Input text="ScreenSchot bukti follow instagram @brilliantz_edu" type="file" />
-                    <Button type="submit" className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}} onClick={changeSuccess}>Simpan & Selesai</Button>
+                    <Button type="submit" className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}}>Simpan & Selesai</Button>
+                    <Button variant="outline-danger" className="mt-3 w-100" style={{height: '48px'}} onClick={() => handleBack(false)}>Batalkan</Button>
                 </div>
             </Form>
-        </div>
+
+        </>
     )
 }
 
@@ -60,4 +65,4 @@ const Select = ({label , defaultValue , data}) => {
     )
 }
 
-export default FormComp
+export default EditProfil
