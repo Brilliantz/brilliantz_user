@@ -1,11 +1,15 @@
 import React , {useState} from 'react'
 import {FormComp , SuccessNotif} from "./LocalComponents";
 
-const ForgotPassword = () => {
+const CompleteProfile = () => {
     const [success , setSuccess] = useState(false);
 
     const handleSuccess = (value) => {
         setSuccess(value);
+    }
+
+    if (localStorage.key("dataLogin") === null || localStorage.key("dataRegister") === null) {
+        window.location.href = "/login";
     }
 
     return (
@@ -24,4 +28,4 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword
+export default CompleteProfile

@@ -9,7 +9,7 @@ const Routes = ({size}) => {
             <Switch>
                 <Route exact path="/login">
                     <Navbars />
-                    <Login />
+                    <Login size={size} />
                 </Route>
                 <Route exact path="/register">
                     <Navbars />

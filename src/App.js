@@ -1,5 +1,6 @@
 import React , {useEffect , useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import { Routes } from './config'
 
 const App = () => {
@@ -14,6 +15,8 @@ const App = () => {
   )
 }
 
+
+// fungsi untuk event window broser resize (responsive)
 const useWindowSize = () => {
   const [windowSize , setWindowSize] = useState({
     width: undefined,
