@@ -22,11 +22,19 @@ const Login = ({size}) => {
                 }))
                 window.location.href = "/complete-profile";
             }).catch(e => {
-                swal.fire({
-                    icon: 'error',
-                    title: 'Anda belum mendaftarkan akun',
-                    text: 'Silahkan mendaftar akun terlebih dahulu',
-                })
+                if (e.code === 'auth/user-not-found') {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Anda belum mendaftarkan akun',
+                        text: 'Silahkan mendaftar akun terlebih dahulu',
+                    })
+                } else if (e.code === 'auth/wrong-password') {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Password anda salah',
+                        text: 'Pastikan anda memasukkan password yang benar',
+                    })
+                }
             })
     }
 

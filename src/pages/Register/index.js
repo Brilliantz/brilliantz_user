@@ -5,30 +5,42 @@ import {EyeClose, Slogan , EyeOpen} from "../../components";
 import fire from "../../config/firebase";
 import swal from "sweetalert2";
 
-const Register = () => {
+const Register = ({size}) => {
     const [name , setName] = useState("")
     const [email , setEmail] = useState("")
     const [password , setPassword] = useState("")
     const [show , setShow] = useState(false);
 
     const submit = () => {
-        fire.auth().createUserWithEmailAndPassword(email , password)
-        .then(response => {
-            if (localStorage.key("dataLogin") !== null) {
-                localStorage.removeItem("dataLogin");
+        swal.fire({
+            icon: 'question',
+            title: 'Yakin data yang diisikan benar ?',
+            text: 'Pastikan alamat email benar dan aktif , kami akan mengirim email sewaktu-waktu',
+            showConfirmButton: true,
+            showCancelButton: true,
+        }).then(respon => {
+            if (respon.isConfirmed) {
+                if (localStorage.key('dataLogin') !== null) {
+                    localStorage.removeItem('dataLogin');
+                }
+                fire.auth().createUserWithEmailAndPassword(email,password)
+                .then(response => {
+                    localStorage.setItem('dataRegister' , JSON.stringify({
+                        email: response.user.email,
+                        name: name,
+                        uid: response.user.uid,
+                    }))
+                    window.location.href = '/complete-profile'
+                })
+                .catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Email telah dipakai di akun lainnya'
+                        })
+                    }
+                }) 
             }
-            localStorage.setItem("dataRegister" , JSON.stringify({
-                email: response.user.email,
-                name: name,
-                uid: response.user.uid
-            }))
-            window.location.href = "/complete-profile";
-        })
-        .catch(error => {
-            swal.fire({
-                icon: 'error',
-                title: 'Gagal mendaftarkan akun',
-            })
         })
     }
     
@@ -41,7 +53,7 @@ const Register = () => {
                         <Form className="d-flex flex-column justify-content-between" style={{height: '450px'}}>
                             <div className="text">
                                 <h1 className="mb-3" style={{fontSize: '32px'}}>Selamat Datang</h1>
-                                <div className="noted" style={{lineHeight: '7px'}}>
+                                <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Isi data diri kamu di bawah untuk melakukan registrasi.</p>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Sudah punya akun ? <span style={{color: '#4A47D6' , cursor: 'pointer'}} onClick={() => history.push('/login')}>Masuk ke akunmu</span></p>
                                 </div>

@@ -13,7 +13,7 @@ const Routes = ({size}) => {
                 </Route>
                 <Route exact path="/register">
                     <Navbars />
-                    <Register />
+                    <Register size={size} />
                 </Route>
                 <Route exact path="/forgot-pass">
                     <Navbars />
