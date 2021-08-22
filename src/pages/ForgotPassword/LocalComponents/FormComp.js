@@ -1,12 +1,26 @@
-import React from 'react'
+import React , {useState} from 'react'
 import {Button , Form } from "react-bootstrap";
+import fire from "../../../config/firebase";
+import swal from "sweetalert2";
 
 const FormComp = ({success , handleSuccess}) => {
-    // nilai success false
+    const [email , setEmail] = useState("");
 
     const changeSuccess = () => {
-        success = true;
-        handleSuccess(success)
+        fire.auth().sendPasswordResetEmail(email)
+        .then(() => {
+            success = true;
+            handleSuccess(success)
+        })
+        .catch(error => {
+            if (error.code === "auth/user-not-found") {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Alamat email tidak ditemukan',
+                    text: 'Pastikan anda memasukkan alamat email yang terdaftar',
+                })
+            }
+        })
     }
 
     return (
@@ -22,10 +36,10 @@ const FormComp = ({success , handleSuccess}) => {
                 <div className="inpt-group">
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label style={{fontSize: '14px'}}>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Email" />
+                        <Form.Control type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                     </Form.Group>
                 </div>
-                <Button type="submit" className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}} onClick={changeSuccess}>
+                <Button className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}} onClick={changeSuccess}>
                     Kirim Link
                 </Button>
             </Form>
