@@ -12,10 +12,23 @@ import {
     useHistory, 
     useRouteMatch
 } from "react-router-dom";
+// import fire from "../../config/firebase"
 
 const Dashboard = ({size}) => {
     let {path , url} = useRouteMatch();
     const history = useHistory();
+
+    // get data user aktif dari localStorage 
+    // get data from localStorage
+    let dataUser;
+    // cek jika key dataUser ada datanya , get datanya
+    if (localStorage.key("dataUser") !== null) {
+        dataUser = JSON.parse(localStorage.getItem("dataUser"));
+    } else {
+        // jika gaada langsung arahkan ke halaman login
+        window.location.href = "/login";
+    }
+
     return (
         <div style={{
             backgroundColor: '#F8F8F8',
@@ -48,8 +61,8 @@ const Dashboard = ({size}) => {
                     <div className={`${style.nav} ${style.content_position}`} style={{border: '2px solid #DADCE0'}}>
                         <CustomContainer className="d-flex justify-content-end h-100">
                             <div className="account d-flex align-items-center justify-content-end">
-                                <div style={{width: '32px' , height: '32px' , backgroundColor: '#FFB332' , borderRadius: '50%'}}></div>
-                                <span>Muhammad Ridlo</span>
+                                <div style={{width: '32px' , height: '32px' , backgroundImage: `url(${dataUser.photoURL})` , backgroundSize: 'cover' , backgroundPosition: 'center' , borderRadius: '50%'}}></div>
+                                <span>{dataUser.displayName}</span>
                             </div>
                         </CustomContainer>
                     </div>
@@ -57,13 +70,12 @@ const Dashboard = ({size}) => {
                     {/* content  */}
                     <div className={`${style.content_position} ${style.contens}`}>
                         <CustomContainer>
-                            {/* <Profil /> */}
                             <Switch>
                                 <Route exact path={path}>
                                     <DashboardView />
                                 </Route>
                                 <Route exact path={`${path}/:choose`}>
-                                    <Content size={size} />
+                                    <Content size={size} dataUser={dataUser} />
                                 </Route>
                             </Switch>
                         </CustomContainer>
@@ -74,7 +86,7 @@ const Dashboard = ({size}) => {
     )
 }
 
-const Content = ({size}) => {
+const Content = ({size , dataUser}) => {
     let {choose} = useParams();
     return (
         <div>
@@ -84,7 +96,7 @@ const Content = ({size}) => {
                 ) : choose === "ranking" ? (
                     <Ranking />
                 ) : choose === "profil" ? (
-                    <Profil size={size} />
+                    <Profil size={size} dataUser={dataUser} />
                 ) : (
                     <span>Choose</span>
                 )

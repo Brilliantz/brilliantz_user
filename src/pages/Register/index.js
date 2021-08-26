@@ -20,17 +20,16 @@ const Register = ({size}) => {
             showCancelButton: true,
         }).then(respon => {
             if (respon.isConfirmed) {
-                if (localStorage.key('dataLogin') !== null) {
-                    localStorage.removeItem('dataLogin');
-                }
                 fire.auth().createUserWithEmailAndPassword(email,password)
-                .then(response => {
-                    localStorage.setItem('dataRegister' , JSON.stringify({
-                        email: response.user.email,
-                        name: name,
-                        uid: response.user.uid,
-                    }))
-                    window.location.href = '/complete-profile'
+                .then(() => {
+                    fire.auth().onAuthStateChanged(user => {
+                        user.updateProfile({
+                            displayName: name,
+                        }).then(() => {
+                            localStorage.setItem("dataUser" , JSON.stringify(user))
+                            window.location.href = "/complete-profile";
+                        })
+                    });
                 })
                 .catch(error => {
                     if (error.code === 'auth/email-already-in-use') {
@@ -55,7 +54,7 @@ const Register = ({size}) => {
                                 <h1 className="mb-3" style={{fontSize: '32px'}}>Selamat Datang</h1>
                                 <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Isi data diri kamu di bawah untuk melakukan registrasi.</p>
-                                    <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Sudah punya akun ? <span style={{color: '#4A47D6' , cursor: 'pointer'}} onClick={() => history.push('/login')}>Masuk ke akunmu</span></p>
+                                    <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Sudah punya akun ? <span style={{color: '#4A47D6' , cursor: 'pointer' , margin: '0'}} onClick={() => history.push('/login')}>Masuk ke akunmu</span></p>
                                 </div>
                             </div>
                             <div className="inpt-group">

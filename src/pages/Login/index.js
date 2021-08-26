@@ -12,15 +12,18 @@ const Login = ({size}) => {
 
     const submit = () => {
         fire.auth().signInWithEmailAndPassword(email, password)
-            .then(response => {
-                if (localStorage.key("dataRegister") !== null) {
-                    localStorage.removeItem("dataRegister");
-                }
-                localStorage.setItem("dataLogin", JSON.stringify({
-                    email: response.user.email,
-                    uid: response.user.uid
-                }))
-                window.location.href = "/complete-profile";
+            .then(() => {
+                fire.auth().onAuthStateChanged((user) => {
+                    localStorage.setItem("dataUser" , JSON.stringify(user));
+                    
+                    // setelah get user yang aktif , cek photoURLnya di user aktif dan detail profil di firestore 
+                    // kosong apa ngga kalo kosong arahkan ke /complete-profile , kalo ngga arahkan ke /dashboard
+                    fire.firestore().collection("users").doc(user.uid).get().
+                    then(userDetail => {
+                        if ((user.photoURL === null) || (!userDetail.exists)) { window.location.href = "/complete-profile" }
+                        else { window.location.href = "/dashboard" }
+                    })
+                });
             }).catch(e => {
                 if (e.code === 'auth/user-not-found') {
                     swal.fire({
@@ -49,7 +52,7 @@ const Login = ({size}) => {
                                 <h1 style={{ fontSize: '32px' }} className="mb-3">Hai Ketemu Lagi</h1>
                                 <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
                                     <p style={{ fontSize: '14px' }} className="text-muted font-weight normal">Isi email dan password di bawah untuk login ke akunmu</p>
-                                    <p style={{ fontSize: '14px' }} className="text-muted font-weight normal">Belum punya akun ? <span style={{ color: '#4A47D6', cursor: 'pointer' }} onClick={() => history.push('/register')}>Daftar dulu yuk</span></p>
+                                    <p style={{ fontSize: '14px' }} className="text-muted font-weight normal">Belum punya akun ? <span style={{ margin: '0', color: '#4A47D6', cursor: 'pointer' }} onClick={() => history.push('/register')}>Daftar dulu yuk</span></p>
                                 </div>
                             </div>
                             <div className="inpt-group">
@@ -76,7 +79,7 @@ const Login = ({size}) => {
 
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Text onClick={() => history.push('/forgot-pass')} style={{ cursor: 'pointer' }}>
-                                        Forgot Password ?.
+                                        Forgot Password ?
                                     </Form.Text>
                                 </Form.Group>
                             </div>
