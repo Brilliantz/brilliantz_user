@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import { Container , Form , Button , InputGroup } from 'react-bootstrap'
+import { Container , Form , Button , InputGroup , Spinner } from 'react-bootstrap'
 import { useHistory } from 'react-router'
 import {EyeClose, Slogan , EyeOpen} from "../../components";
 import fire from "../../config/firebase";
@@ -10,6 +10,7 @@ const Register = ({size}) => {
     const [email , setEmail] = useState("")
     const [password , setPassword] = useState("")
     const [show , setShow] = useState(false);
+    const [status , setStatus] = useState(false)
 
     const submit = () => {
         swal.fire({
@@ -22,6 +23,7 @@ const Register = ({size}) => {
             if (respon.isConfirmed) {
                 fire.auth().createUserWithEmailAndPassword(email,password)
                 .then(() => {
+                    setStatus(true)
                     fire.auth().onAuthStateChanged(user => {
                         user.updateProfile({
                             displayName: name,
@@ -47,7 +49,7 @@ const Register = ({size}) => {
     return (
         <>
             <section style={{position: 'absolute' , top: '80px' , bottom: '0' , right: '0' , left: '0'}} className="d-flex">
-                <section style={{width: '50%' , height: '100%'}}>
+                <section style={{width: `${size.width <= 700 ? '100%' : '50%'}` , height: '100%'}}>
                     <Container  className="w-75 h-100 d-flex justify-content-center align-items-center">
                         <Form className="d-flex flex-column justify-content-between" style={{height: '450px'}}>
                             <div className="text">
@@ -85,13 +87,19 @@ const Register = ({size}) => {
                             </div>
 
                             <Button className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}} onClick={() => submit()} >
-                                Registrasi Akun
+                                {
+                                    status ? (
+                                        <Spinner animation="border" variant="light" />
+                                    ) : (
+                                        <span>Registrasi Akun</span>
+                                    )
+                                }
                             </Button>
                             
                         </Form>
                     </Container>
                 </section>
-                <Slogan />
+                <Slogan size={size} />
             </section>
         </>
     )

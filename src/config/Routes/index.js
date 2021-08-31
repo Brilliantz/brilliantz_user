@@ -8,23 +8,23 @@ const Routes = ({size}) => {
         <Router>
             <Switch>
                 <Route exact path="/login">
-                    <Navbars />
+                    <Navbars size={size} />
                     <Login size={size} />
                 </Route>
                 <Route exact path="/register">
-                    <Navbars />
+                    <Navbars size={size} />
                     <Register size={size} />
                 </Route>
                 <Route exact path="/forgot-pass">
-                    <Navbars />
+                    <Navbars size={size} />
                     <ForgotPassword />
                 </Route>
                 <Route exact path="/complete-profile">
-                    <Navbars />
+                    <Navbars size={size} />
                     <CompleteProfile />
                 </Route>
                 <Route exact path="/payment">
-                    <Navbars />
+                    <Navbars size={size} />
                     <Payment />
                 </Route>
                 <Route exact path="/dashboard">

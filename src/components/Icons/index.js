@@ -6,6 +6,7 @@ import EditIcon from "./Edit.icon";
 import LeftArrow from "./LeftArrow";
 import EyeClose from "./EyeClose";
 import EyeOpen from "./EyeOpen";
+import SpinnerLoader from "./SpinnerLoader"
 
 export {
     DashboardIcon , 
@@ -15,5 +16,6 @@ export {
     EditIcon , 
     LeftArrow,
     EyeClose,
-    EyeOpen
+    EyeOpen,
+    SpinnerLoader,
 };

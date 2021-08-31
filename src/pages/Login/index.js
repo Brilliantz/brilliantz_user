@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Form, Button, InputGroup } from 'react-bootstrap'
+import { Container, Form, Button, InputGroup , Spinner} from 'react-bootstrap'
 import { useHistory } from 'react-router'
 import { Slogan, EyeClose, EyeOpen } from "../../components";
 import fire from "../../config/firebase";
@@ -9,13 +9,14 @@ const Login = ({size}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [show , setShow] = useState(false);
+    const [status , setStatus] = useState(false);
 
     const submit = () => {
         fire.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
                 fire.auth().onAuthStateChanged((user) => {
                     localStorage.setItem("dataUser" , JSON.stringify(user));
-                    
+                    setStatus(true);
                     // setelah get user yang aktif , cek photoURLnya di user aktif dan detail profil di firestore 
                     // kosong apa ngga kalo kosong arahkan ke /complete-profile , kalo ngga arahkan ke /dashboard
                     fire.firestore().collection("users").doc(user.uid).get().
@@ -45,7 +46,7 @@ const Login = ({size}) => {
     return (
         <>
             <section style={{ position: 'absolute', top: '80px', bottom: '0', right: '0', left: '0' }} className="d-flex">
-                <section style={{ width: '50%', height: '100%' }}>
+                <section style={{ width: `${size.width <= 700 ? '100%' : '50%'}`, height: '100%' }}>
                     <Container className="w-75 h-100 d-flex justify-content-center align-items-center">
                         <Form className="d-flex flex-column justify-content-between">
                             <div className="text">
@@ -84,12 +85,18 @@ const Login = ({size}) => {
                                 </Form.Group>
                             </div>
                             <Button className="mt-3 w-100" style={{ height: '48px', backgroundColor: '#4A47D6' }} onClick={() => submit()}>
-                                Masuk
+                                {
+                                    status ? (
+                                        <Spinner animation="border" variant="light" />
+                                    ) : (
+                                        <span>Masuk</span>
+                                    )
+                                }
                             </Button>
                         </Form>
                     </Container>
                 </section>
-                <Slogan />
+                <Slogan size={size} />
             </section>
         </>
     )
