@@ -1,0 +1,17 @@
+.grid-wrapper{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    column-gap: 10px;
+    row-gap: 15px;
+}
+
+#button_detail {
+    color: #4A47D6;
+    border:#4A47D6 1px solid;
+    border-radius: 4px;
+}
+
+#button_detail:hover {
+    color: white;
+    background-color: #4A47D6;
+}
