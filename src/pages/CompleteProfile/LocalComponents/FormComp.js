@@ -56,9 +56,7 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
                         user.updateProfile({
                             photoURL: response,
                         }).then(() => {
-                            fire.auth().onAuthStateChanged(userChanged => {
-                                localStorage.setItem("dataUser" , JSON.stringify(userChanged))
-                            })
+                            localStorage.setItem("dataUser" , JSON.stringify(user))
                         })
                     })
                 }
@@ -147,9 +145,6 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
                             <Select label="Kota / Kabupaten" data={dataKota} name="kabupaten" onChange={(e) => pilihKotaProvinsi(e)} />
                         )
                     }
-                    
-                    {/* <Select label="Universitas Impian" data={jenisKelamin} name="univ_impian" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} /> */}
-                    {/* <Select label="Jurusan Impian" data={jenisKelamin} name="jurusan_impian" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} /> */}
                     
                     {/* sementara */}
                     <Input text="Universitas Impian" type="text" name="univ_impian" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />

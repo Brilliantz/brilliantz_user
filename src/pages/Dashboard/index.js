@@ -42,7 +42,7 @@ const Dashboard = ({size}) => {
             <Router>
 
                 {/* sidebar */}
-                <div className={style.side_menu}>
+                <div className={`${size.width < 660 ? 'd-none' : 'd-flex'}  ${style.side_menu}`}>
                     <ul className={style.side_menu_items}>
                         <li className="d-flex align-items-center" style={{marginBottom: '20px' , height: '80px' , padding: '0 0 0 10px'}} onClick={() => history.push('/')}>
                             <span className={`${style.text} ${style.text_logo}`}>
@@ -56,19 +56,60 @@ const Dashboard = ({size}) => {
                     </ul>
                 </div>
 
-                <div className={`${style.content} h-100`}>
+                <div className={`${style.link_collapse} fixed-bottom`} style={{display: `${size.width < 660 ? 'block' : 'none'}`}} >
+                    <ul className="d-flex h-100 w-100 justify-content-evenly">
+                        <li className={style.list}>
+                            <Link to="/dashboard" className="d-flex justify-content-center flex-column p-2">
+                                <DashboardIcon />
+                                <span>Dashboard</span>
+                            </Link>
+                        </li>
+                        <li className={style.list}>
+                            <Link to={`${url}/nilai-tryout`} className="d-flex justify-content-center flex-column p-2">
+                                <NilaiTryoutIcon />
+                                <span>Nilai Tryout</span>
+                            </Link>
+                        </li>
+                        <li className={style.list}>
+                            <Link to={`${url}/ranking`} className="d-flex justify-content-center flex-column p-2">
+                                <RankingIcon />
+                                <span>Ranking</span>
+                            </Link>
+                        </li>
+                        <li className={style.list}>
+                            <Link to={`${url}/profil`} className="d-flex justify-content-center flex-column p-2">
+                                <ProfilIcon />
+                                <span>Profil</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div className='h-100' style={{marginLeft: `${size.width < 665 ? '0' : '13rem'}` , width: `${size.width < 660 ? '100%' : 'calc(100% - 13rem)'}` }} >
                     {/* nav */}
                     <div className={`${style.nav} ${style.content_position}`} style={{border: '2px solid #DADCE0'}}>
-                        <CustomContainer className="d-flex justify-content-end h-100">
-                            <div className="account d-flex align-items-center justify-content-end">
-                                <div style={{width: '32px' , height: '32px' , backgroundImage: `url(${dataUser.photoURL})` , backgroundSize: 'cover' , backgroundPosition: 'center' , borderRadius: '50%'}}></div>
-                                <span>{dataUser.displayName}</span>
+                        <CustomContainer className="d-flex h-100">
+                            <div className="account d-flex align-items-center w-100 justify-content-between">
+                                {
+                                    size.width < 660 ? (
+                                        <div>
+                                            <Logo />
+                                        </div>
+                                    ) : (
+                                        <span></span>
+                                    )
+                                }
+                                <div className="d-flex align-items-center">
+                                    <div style={{width: '32px' , height: '32px' , backgroundImage: `url(${dataUser.photoURL})` , backgroundSize: 'cover' , backgroundPosition: 'center' , borderRadius: '50%'}}></div>
+                                    <span>{dataUser.displayName}</span>
+                                </div>
                             </div>
                         </CustomContainer>
                     </div>
 
                     {/* content  */}
-                    <div className={`${style.content_position} ${style.contens}`}>
+                    <div className={`${style.content_position}`}>
                         <CustomContainer>
                             <Switch>
                                 <Route exact path={path}>
@@ -89,7 +130,7 @@ const Dashboard = ({size}) => {
 const Content = ({size , dataUser}) => {
     let {choose} = useParams();
     return (
-        <div>
+        <div style={{paddingBottom: '50px' , boxSizing: 'border-box'}}>
             {
                 choose === "nilai-tryout" ? (
                     <NilaiTryout />
@@ -105,11 +146,11 @@ const Content = ({size , dataUser}) => {
     )
 }
 
-const List = ({icon , title , path}) => {
+const List = ({icon , title , path , ...rest}) => {
     const Icon = icon;
     return (
         <>
-            <li className={style.list}>
+            <li className={style.list} {...rest}>
                 <Link to={path} className={`${style.text} ${style.text_link}`}>
                     <Icon />
                     <span>{title}</span>
