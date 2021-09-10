@@ -133,7 +133,7 @@ const Content = ({size , dataUser}) => {
         <div style={{paddingBottom: '50px' , boxSizing: 'border-box'}}>
             {
                 choose === "nilai-tryout" ? (
-                    <NilaiTryout />
+                    <NilaiTryout size={size} />
                 ) : choose === "ranking" ? (
                     <Ranking />
                 ) : choose === "profil" ? (
@@ -150,7 +150,7 @@ const List = ({icon , title , path , ...rest}) => {
     const Icon = icon;
     return (
         <>
-            <li className={style.list} {...rest}>
+            <li className={`${style.list} my-2`} {...rest}>
                 <Link to={path} className={`${style.text} ${style.text_link}`}>
                     <Icon />
                     <span>{title}</span>

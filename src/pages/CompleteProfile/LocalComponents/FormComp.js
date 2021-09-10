@@ -6,6 +6,8 @@ import axios from "axios";
 import swal from "sweetalert2";
 
 const FormComp = ({ success, handleSuccess, dataUser}) => {
+    const [dataPreview , setDataPrev] = useState({ photoURL: dataUser.photoURL , displayName: dataUser.displayName });
+
     const [inputs , setInputs] = useState({});
     const [photoPreview , setPhotoPreview] = useState("");
 
@@ -20,8 +22,12 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
         .then(response => {
             setDataProvinsi(response.data);
             setLoadingProvinsi(false);
-        })
-    } , [])
+        }).catch(err => console.log(err))
+
+        if (dataPreview.photoURL !== null) { 
+            setInputs({...inputs , photoProfile: dataPreview.photoURL}) 
+        }
+    } , [dataProvinsi])
 
     const uploadImage = (e) => {
         e.preventDefault();
@@ -96,7 +102,13 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
     const sendData = (e) => {
         e.preventDefault();
         const db = fire.firestore();
-
+        if (dataUser.displayName !== dataPreview.displayName) {
+            fire.auth().onAuthStateChanged(user => {
+                user.updateProfile({displayName: dataPreview.displayName})
+                .then(() => localStorage.setItem("dataUser" , JSON.stringify(user)))
+                .catch(err => console.log(err))
+            })
+        }
         db.collection("users").doc(dataUser.uid).set({
             ...inputs,
             email: dataUser.email,
@@ -113,9 +125,12 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
             <Form className="d-flex justify-content-between mt-3" onSubmit={sendData} encType="multipart/form-data">
                 <div className="d-flex flex-column" style={{ width: '35%' }}>
                     <img 
-                        src={photoPreview === "" ? 
-                            'https://jdihn.jenepontokab.go.id/images/user/no-image.png' 
-                            : photoPreview} 
+                        src={
+                            photoPreview === "" ? (
+                                dataPreview.photoURL !== null ? dataPreview.photoURL : "https://jdihn.jenepontokab.go.id/images/user/no-image.png"
+                            ) : 
+                            photoPreview
+                        }
                         alt="profil-preview" 
                         style={{ height: '200px' }} 
                         className="w-100 border rounded" 
@@ -125,7 +140,7 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
                 </div>
 
                 <div style={{ width: '55%' }}>
-                    <Input text="Nama Lengkap" type="text" name="nama_lengkap" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />
+                    <Input text="Nama Lengkap" type="text" filledData={dataPreview.displayName} name="nama_lengkap" onChange={(e) => {setInputs({...inputs, [e.target.name]: e.target.value}); setDataPrev({...dataPreview , displayName: e.target.value})}} />
                     <Select label="Jenis Kelamin" data={jenisKelamin} name="jenis_kelamin" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />
                     <Input text="Asal Sekolah" type="text" name="asal_sekolah" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />
                     {
@@ -160,12 +175,12 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
     )
 }
 
-const Input = ({ text, type, name, ...rest }) => {
+const Input = ({ text, type, filledData, name, ...rest }) => {
     return (
         <>
             <Form.Group className="mb-3">
                 <Form.Label style={{ fontSize: '14px' }}>{text}</Form.Label>
-                <Form.Control type={type} placeholder={text} name={name} required={true} {...rest} />
+                <Form.Control type={type} placeholder={text} value={filledData} name={name} required={true} {...rest} />
             </Form.Group>
         </>
     )

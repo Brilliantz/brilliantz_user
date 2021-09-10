@@ -1,92 +1,164 @@
-// import React from 'react'
-// import BootstrapTable from 'react-bootstrap-table-next'
-// import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
-// import { Breadcrumb, Form } from 'react-bootstrap';
-// import style from "../../Dashboard.module.css";
-
-// const Ranking = () => {
-//     const products = [
-//         { id: 1, name: 'George', animal: 'Monkey' },
-//         { id: 2, name: 'Jeffrey', animal: 'Giraffe' },
-//         { id: 3, name: 'Alice', animal: 'Giraffe' },
-//         { id: 4, name: 'Foster', animal: 'Tiger' },
-//         { id: 5, name: 'Tracy', animal: 'Bear' },
-//         { id: 6, name: 'Joesph', animal: 'Lion' },
-//         { id: 7, name: 'Tania', animal: 'Deer' },
-//         { id: 8, name: 'Chelsea', animal: 'Tiger' },
-//         { id: 9, name: 'Benedict', animal: 'Tiger' },
-//         { id: 10, name: 'Chadd', animal: 'Lion' },
-//         { id: 11, name: 'Delphine', animal: 'Deer' },
-//         { id: 12, name: 'Elinore', animal: 'Bear' },
-//         { id: 13, name: 'Stokes', animal: 'Tiger' },
-//         { id: 14, name: 'Tamara', animal: 'Lion' },
-//         { id: 15, name: 'Zackery', animal: 'Bear' }
-//     ];
-
-//     const columns = [
-//         { dataField: 'id', text: 'Id' , sort: true},
-//         { dataField: 'name', text: 'Name', sort: true },
-//         { dataField: 'animal', text: 'Animal' }
-//     ];
-
-//     const { SearchBar } = Search;
-
-//     return (
-//         <div>
-//             <Breadcrumb style={{ marginTop: '1rem' }} className={style.breadcrumb}>
-//                 <Breadcrumb.Item href="#">RANKING</Breadcrumb.Item>
-//             </Breadcrumb>
-
-//             <h1 style={{ fontSize: '32px' , margin: '-10px 0 20px 0'}}>Ranking</h1>
-
-//             <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
-//                 <ToolkitProvider
-//                     bootstrap4
-//                     keyField='id'
-//                     data={products}
-//                     columns={columns}
-//                     search
-//                 >
-//                     {
-//                         props => (
-//                             <div>
-//                                 <div className="d-flex justify-content-between align-items-end">
-//                                     <SearchBar {...props.searchProps} srText="" />
-//                                     <Form.Select style={{ width: '186px', height: '40px', borderRadius: '20px', border: '1px solid #252D30' }}>
-//                                         <option>Default select</option>
-//                                     </Form.Select>
-//                                 </div>
-//                                 <hr />
-//                                 <BootstrapTable
-//                                     {...props.baseProps}
-//                                     bordered={false}
-//                                     striped
-//                                     hover
-//                                     condensed
-//                                     sort={true}
-//                                 />
-//                             </div>
-//                         )
-//                     }
-//                 </ToolkitProvider>
-//             </div>
-
-//         </div>
-//     )
-// }
-
-// export default Ranking
-
-
-import React from 'react'
+import React from 'react';
+import { Breadcrumb, InputGroup, FormControl, DropdownButton, Dropdown } from "react-bootstrap"
+import "./ranking.css"
+import { SearchIcon } from "../../../../components";
 
 const Ranking = () => {
     return (
-        <div>
-            Ranking
-        </div>
+        <>
+            <ProductTable
+                products={[
+                    { id: 1, name: 'Cheese', price: 4.9, stock: 20 },
+                    { id: 2, name: 'Milk', price: 1.9, stock: 32 },
+                    { id: 3, name: 'Yoghurt', price: 2.4, stock: 12 },
+                    { id: 4, name: 'Heavy Cream', price: 3.9, stock: 9 },
+                    { id: 5, name: 'Butter', price: 0.9, stock: 99 },
+                    { id: 6, name: 'Sour Cream ', price: 2.9, stock: 86 },
+                    { id: 7, name: 'Fancy French Cheese 🇫🇷', price: 99, stock: 12 },
+                ]}
+            />
+        </>
     )
 }
+
+const useSortableData = (items, config = null) => {
+    const [sortConfig, setSortConfig] = React.useState(config);
+
+    const sortedItems = React.useMemo(() => {
+        let sortableItems = [...items];
+        if (sortConfig !== null) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [items, sortConfig]);
+
+    const requestSort = (key) => {
+        let direction = 'ascending';
+        if (
+            sortConfig &&
+            sortConfig.key === key &&
+            sortConfig.direction === 'ascending'
+        ) {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    return { items: sortedItems, requestSort, sortConfig };
+};
+
+const ProductTable = (props) => {
+    const { items, requestSort, sortConfig } = useSortableData(props.products);
+    const getClassNamesFor = (name) => {
+        if (!sortConfig) {
+            return;
+        }
+        return sortConfig.key === name ? sortConfig.direction : undefined;
+    };
+
+    const handleSelect = (e) => {
+        console.log(e);
+    }
+
+    return (
+        <>
+            <Breadcrumb style={{ marginTop: '1rem' }} >
+                <Breadcrumb.Item href="#">RANKING</Breadcrumb.Item>
+            </Breadcrumb>
+
+            <h1 style={{ fontSize: '32px', margin: '-10px 0 20px 0' }}>Ranking</h1>
+
+            <div style={{ boxSizing: 'border-box' }} className="bg-white p-3">
+                <div className="d-flex justify-content-between">
+                    <InputGroup className="mb-3 w-50" >
+                        <InputGroup.Text id="basic-addon1" style={{ marginLeft: '0' }}><SearchIcon /></InputGroup.Text>
+                        <FormControl
+                            placeholder="Cari Nama"
+                            aria-label="Cari Nama"
+                            aria-describedby="basic-addon1"
+                            type="text"
+                        />
+                    </InputGroup>
+
+                    <DropdownButton
+                        alignRight
+                        title="Dropdown right"
+                        id="dropdown-menu-align-right"
+                        onSelect={handleSelect}
+                    >
+                        <Dropdown.Item eventKey="option-1">option-1</Dropdown.Item>
+                        <Dropdown.Item eventKey="option-2">option-2</Dropdown.Item>
+                        <Dropdown.Item eventKey="option-3">option 3</Dropdown.Item>
+                    </DropdownButton>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <span type="button">No</span>
+                            </th>
+                            <th>
+                                <span type="button">Nama Siswa</span>
+                            </th>
+                            <th>
+                                <span type="button">Asal SMA</span>
+                            </th>
+                            <th>
+                                <button
+                                    type="button"
+                                    onClick={() => requestSort('name')}
+                                    className={getClassNamesFor('name')}
+                                >
+                                    Nilai TKA
+                                </button>
+                            </th>
+                            <th>
+                                <button
+                                    type="button"
+                                    onClick={() => requestSort('price')}
+                                    className={getClassNamesFor('price')}
+                                >
+                                    Nilai TPS
+                                </button>
+                            </th>
+                            <th>
+                                <button
+                                    type="button"
+                                    onClick={() => requestSort('stock')}
+                                    className={getClassNamesFor('stock')}
+                                >
+                                    Nilai Rata-Rata
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((item, index) => (
+                            <tr key={item.id}>
+                                <td>{index + 1}</td>
+                                <td>Wahyu Puji Ramadhan</td>
+                                <td>SMA Negeri Sejahtera Surabaya Timur Tengah</td>
+                                <td>{item.name}</td>
+                                <td>${item.price}</td>
+                                <td>{item.stock}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+        </>
+    );
+};
 
 export default Ranking
 

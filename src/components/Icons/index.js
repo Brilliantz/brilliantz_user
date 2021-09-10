@@ -7,6 +7,7 @@ import LeftArrow from "./LeftArrow";
 import EyeClose from "./EyeClose";
 import EyeOpen from "./EyeOpen";
 import SpinnerLoader from "./SpinnerLoader"
+import SearchIcon from "./SearchIcon";
 
 export {
     DashboardIcon , 
@@ -18,4 +19,5 @@ export {
     EyeClose,
     EyeOpen,
     SpinnerLoader,
+    SearchIcon
 };

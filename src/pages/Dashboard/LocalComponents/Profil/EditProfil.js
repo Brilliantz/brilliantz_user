@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Breadcrumb, Button, Form } from 'react-bootstrap'
 import style from "../../Dashboard.module.css";
-import { LeftArrow, SpinnerLoader } from "../../../../components";
+import { LeftArrow } from "../../../../components";
 import fire from "../../../../config/firebase";
 import swal from "sweetalert2";
 import axios from "axios";
@@ -19,6 +19,7 @@ const EditProfil = (props) => {
         no_hp: props.data ? props.data.no_hp : "",
         photoProfile: props.data ? props.data.photoProfile : "",
     })
+    
     const [update , setUpdate] = useState({})
 
     const updateImage = (e) => {
@@ -95,17 +96,13 @@ const EditProfil = (props) => {
         .then(response => {
             setProvinsi(response.data)
             setLoadingProvinsi(false)
-            let prov = filterProvinsi(response.data)
-            axios.get(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${prov[0].id}.json`)
+            let filterProvinsi = response.data.filter(prov => prov.name === dataUser.provinsi); 
+            axios.get(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${filterProvinsi[0].id}.json`)
             .then(res => {
                 setKota(res.data)
             })
         })
     },[])
-
-    const filterProvinsi = (datas) => {
-        return datas.filter(data => data.name === dataUser.provinsi)
-    }
 
     const pilihProvinsiKota = (e) => {
         e.preventDefault();
