@@ -1,38 +1,62 @@
-import React from 'react'
-import { Breadcrumb , Button , Form} from 'react-bootstrap'
-import style from "../../Dashboard.module.css";
-import ProgramBought from './ProgramBought';
-import OtherProgram from './OtherProgram';
+import React from 'react';
+import { Breadcrumb } from 'react-bootstrap';
+import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail} from "./LocalComponents";
 
+import {
+    BrowserRouter as Router, 
+    Link, 
+    Route, 
+    Switch , 
+    useParams, 
+    useHistory, 
+    useRouteMatch
+} from "react-router-dom";
 
 
 const DashboardView = () => {
+    let {path , url} = useRouteMatch();
+    const history = useHistory();
+
     return (
         <div>
-            <div className="row mt-4">
-                <div className="col">
-                    <Breadcrumb className={style.breadcrumb}>
-                        <Breadcrumb.Item href="#">
-                            DASHBOARD
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                </div>
+            {/* content  */}
+            <div>
+                <Router>
+                    <Switch>
+                        <Route exact path={path}>
+                            <ProgramList />
+                        </Route>
+                        <Route exact path={`${path}/:choose`}>
+                            <Content />
+                        </Route>
+                    </Switch>
+                </Router>
             </div>
-            <div className="row">
-                <div className="col">
-                    <h2 className="font-weight-bold">Dashboard</h2>
-                </div>
-            </div>
-            <div className="row mt-3">
-                <div className="col">
-                    <ProgramBought></ProgramBought>
-                </div>
-            </div>
-            <div className="row mt-5">
-                <div className="col">
-                    <OtherProgram></OtherProgram>
-                </div>
-            </div>
+            
+        </div>
+
+        
+    )
+}
+
+const Content = () => {
+    let {choose} = useParams();
+
+    return (
+        <div>
+            {
+                choose === "program-detail" ? (
+                    <ProgramDetail />
+                ) : choose === "program-bought" ? (
+                    <ProgramBoughtList />
+                ) : choose === "other-programs" ? (
+                    <OtherProgramList />
+                ) : choose === "webinar-detail" ? (
+                    <WebinarDetail />
+                ) : (
+                    <span>Choose</span>
+                )
+            }
         </div>
     )
 }

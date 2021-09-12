@@ -1,9 +1,37 @@
-import React from 'react'
-import { Button , Card} from 'react-bootstrap'
-import style from "./ProgramBought.module.css";
+import React from 'react';
+import { Breadcrumb, Card, Button} from 'react-bootstrap';
+import style from "../../../Dashboard.module.css";
 
 
-const ProgramBought = () => {
+const ProgramBoughtList = () => {
+
+    return (
+        <div>
+            {/* breadcrumb */}
+            <div className="row mt-4">
+                <div className="col">
+                    <Breadcrumb  className={style.breadcrumb}>
+                        <Breadcrumb.Item href="#" >
+                            DASHBOARD
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item href="#" >
+                            PROGRAM YANG TELAH DIBELI
+                        </Breadcrumb.Item>
+                    </Breadcrumb>
+                </div>
+            </div>
+
+            <div className="row mt-4">
+                <div className="col">
+                    <ProgramBoughtCard />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const ProgramBoughtCard = () => {
+
     const programsData = [
         { id: 1, programType: "webinar", programTitle: "Webinar 1", programDate: "Kamis, 22 Juli 2021", programStartTime: "08:00", programEndTime: "10:00", paid: true},
         { id: 2, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
@@ -17,11 +45,6 @@ const ProgramBought = () => {
                     <div className="row">
                         <div className="col">
                             <h5><strong>Program yang telah dibeli</strong></h5>
-                        </div>
-                        <div className="col d-flex flex-row-reverse">
-                            <a className="text-decoration-none" href="#" style={{color: '#4A47D6'}}>
-                                Lihat Semua
-                            </a>
                         </div>
                     </div>
                 </Card.Header>
@@ -108,4 +131,4 @@ const TryoutCard = ({ programDetail }) => {
     )
 }
 
-export default ProgramBought
+export default ProgramBoughtList

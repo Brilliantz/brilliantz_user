@@ -88,6 +88,9 @@ const Dashboard = ({size}) => {
 
 const Content = ({size , dataUser}) => {
     let {choose} = useParams();
+
+    console.log(choose);
+
     return (
         <div>
             {

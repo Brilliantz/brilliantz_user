@@ -1,12 +1,17 @@
 import React from 'react'
 import { Button , Card} from 'react-bootstrap'
 import style from "./ProgramBought.module.css";
+import {
+    Link, 
+    useRouteMatch
+} from "react-router-dom";
 
+const ProgramBought = () => {
+    let {path , url} = useRouteMatch();
 
-const OtherProgram = () => {
     const programsData = [
-        { id: 1, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
-        { id: 2, programType: "tryout", programTitle: "TO 2", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
+        { id: 1, programType: "webinar", programTitle: "Webinar 1", programDate: "Kamis, 22 Juli 2021", programStartTime: "08:00", programEndTime: "10:00", paid: true},
+        { id: 2, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
         { id: 3, programType: "webinar", programTitle: "Webinar 2", programDate: "Kamis, 24 Juli 2021", programStartTime: "14:00", programEndTime: "16:00", paid: false},
     ]
 
@@ -16,12 +21,17 @@ const OtherProgram = () => {
                 <Card.Header className="p-3 border-0" style={{backgroundColor: 'white'}}>
                     <div className="row">
                         <div className="col">
-                            <h5><strong>Program Brilliantz Lainnya</strong></h5>
+                            <h5><strong>Program yang telah dibeli</strong></h5>
                         </div>
                         <div className="col d-flex flex-row-reverse">
-                            <a className="text-decoration-none" href="#" style={{color: '#4A47D6'}}>
+
+                        <Link to={`${url}/program-bought`} >
+                            <span className="text-decoration-none" style={{color: '#4A47D6'}}>
                                 Lihat Semua
-                            </a>
+                            </span>
+                        </Link>
+
+
                         </div>
                     </div>
                 </Card.Header>
@@ -39,7 +49,7 @@ const ProgramCard = ({ programs }) => {
         <>  
             <div className="row"> 
                 <div className="col-lg-4">
-                    <TryoutCard programDetail={programs[0]}></TryoutCard>
+                    <WebinarCard programDetail={programs[0]}></WebinarCard>
                 </div>
                 <div className="col-lg-4">
                     <TryoutCard programDetail={programs[1]}></TryoutCard>
@@ -71,19 +81,8 @@ const WebinarCard = ({ programDetail }) => {
                             </div>
                         </div>
                         <hr />
-                        <div className="row">
-                            <div className="col-sm">
-                                    Biaya Pendaftaran:
-                                    <br />
-                                <small>15.000</small>
-                            </div>
-                            <div className="col-sm text-right">
-                                <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Daftar</Button>    
-                                &nbsp;
-                                <button id={style.button_detail} className="btn" type="button">
-                                    Detail
-                                </button>
-                            </div>
+                        <div className="d-flex flex-row-reverse">
+                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Masuk Conference</Button>
                         </div>
                     </Card.Body>
                 </Card>
@@ -106,19 +105,12 @@ const TryoutCard = ({ programDetail }) => {
                             </div>
                         </div>
                         <hr />
-                        <div className="row">
-                            <div className="col-sm">
-                                    Biaya Pendaftaran:
-                                    <br />
-                                <small>15.000</small>
-                            </div>
-                            <div className="col-sm text-right">
-                                <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Daftar</Button>    
-                                &nbsp;
-                                <button id={style.button_detail} className="btn" type="button">
-                                    Detail
-                                </button>
-                            </div>
+                        <div className="d-flex flex-row-reverse">
+                            <button id={style.button_detail} className="btn" type="button">
+                                Detail
+                            </button>
+                            &nbsp;
+                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Kerjakan</Button>
                         </div>
                     </Card.Body>
                 </Card>
@@ -126,4 +118,4 @@ const TryoutCard = ({ programDetail }) => {
     )
 }
 
-export default OtherProgram
+export default ProgramBought

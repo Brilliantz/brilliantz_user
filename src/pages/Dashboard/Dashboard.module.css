@@ -93,7 +93,25 @@
     height: 100%;
   }
 
+  .breadcrumb {
+      color: #4A47D6;
+      text-decoration: none;
+      background-color: transparent;
+  }
+
   .breadcrumb li a{
       color: #4A47D6;
       text-decoration: none;
+      background-color: transparent;
   }
+
+  #button_detail {
+    color: #4A47D6;
+    border:#4A47D6 1px solid;
+    border-radius: 4px;
+}
+
+#button_detail:hover {
+    color: white;
+    background-color: #4A47D6;
+}
