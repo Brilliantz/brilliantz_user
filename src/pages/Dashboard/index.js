@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState} from 'react'
 import {DashboardView , NilaiTryout , Ranking , Profil} from "./LocalComponents";
 import style from "./Dashboard.module.css";
 import { DashboardIcon , Logo , NilaiTryoutIcon , RankingIcon , ProfilIcon} from '../../components';
@@ -29,6 +29,8 @@ const Dashboard = ({size}) => {
         window.location.href = "/login";
     }
 
+    const [linkActive , setLinkActive] = useState(window.location.pathname)
+
     return (
         <div style={{
             backgroundColor: '#F8F8F8',
@@ -44,18 +46,19 @@ const Dashboard = ({size}) => {
                 {/* sidebar */}
                 <div className={`${size.width < 660 ? 'd-none' : 'd-flex'}  ${style.side_menu}`}>
                     <ul className={style.side_menu_items}>
-                        <li className="d-flex align-items-center" style={{marginBottom: '20px' , height: '80px' , padding: '0 0 0 10px'}} onClick={() => history.push('/')}>
+                        <li className="d-flex align-items-center" style={{marginBottom: '20px' , height: '80px' , padding: '0 0 0 10px'}}>
                             <span className={`${style.text} ${style.text_logo}`}>
                                 <Logo />
                             </span>
                         </li>
-                        <List icon={DashboardIcon} title="Dashboard" path="/dashboard" />
-                        <List icon={NilaiTryoutIcon} title="Nilai TryOut" path={`${url}/nilai-tryout`} />
-                        <List icon={RankingIcon} title="Ranking" path={`${url}/ranking`} />
-                        <List icon={ProfilIcon} title="Profil" path={`${url}/profil`} />
+                        <List icon={DashboardIcon} title="Dashboard" path="/dashboard" isActive={linkActive} onClick={() => setLinkActive("/dashboard")} />
+                        <List icon={NilaiTryoutIcon} title="Nilai TryOut" path={`${url}/nilai-tryout`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/nilai-tryout")} />
+                        <List icon={RankingIcon} title="Ranking" path={`${url}/ranking`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/ranking")} />
+                        <List icon={ProfilIcon} title="Profil" path={`${url}/profil`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/profil")} />
                     </ul>
                 </div>
 
+                {/* sidebar responsive */}
                 <div className={`${style.link_collapse} fixed-bottom`} style={{display: `${size.width < 660 ? 'block' : 'none'}`}} >
                     <ul className="d-flex h-100 w-100 justify-content-evenly">
                         <li className={style.list}>
@@ -146,14 +149,14 @@ const Content = ({size , dataUser}) => {
     )
 }
 
-const List = ({icon , title , path , ...rest}) => {
+const List = ({icon , title , path , isActive , ...rest}) => {
     const Icon = icon;
     return (
         <>
-            <li className={`${style.list} my-2`} {...rest}>
+            <li className={`${style.list} my-2`} style={{backgroundColor: `${isActive !== "" ? isActive === path ? "#EAE9FA" : "" : ""}`}} {...rest}>
                 <Link to={path} className={`${style.text} ${style.text_link}`}>
                     <Icon />
-                    <span>{title}</span>
+                    <span style={{color: `${isActive !== "" ? isActive === path ? "#6265DC" : "" : ""}`}}>{title}</span>
                 </Link>
             </li>
         </>

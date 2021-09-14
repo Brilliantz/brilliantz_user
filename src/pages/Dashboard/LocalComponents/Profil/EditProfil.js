@@ -15,9 +15,9 @@ const EditProfil = (props) => {
         email: props.data ? props.data.email : "",
         jenis_kelamin: props.data ? props.data.jenis_kelamin : "",
         provinsi: props.data ? props.data.provinsi : "",
-        univ_impian: props.data ? props.data.univ_impian : "",
+        universitas_impian: props.data ? props.data.universitas_impian : "",
         no_hp: props.data ? props.data.no_hp : "",
-        photoProfile: props.data ? props.data.photoProfile : "",
+        foto_profil: props.data ? props.data.foto_profil : "",
     })
     
     const [update , setUpdate] = useState({})
@@ -28,19 +28,19 @@ const EditProfil = (props) => {
             let uploadImage = fire.storage().ref().child(`users/photoProfile/${props.data.nama_lengkap}-${e.target.files[0].name}`).put(e.target.files[0]);
             uploadImage.then((snapshot) => {
                 snapshot.ref.getDownloadURL().then(response => {
-                    setUpdate({...update , photoProfile: response})
+                    setUpdate({...update , foto_profil: response})
                     // mengubah di photoURL di onAuthStateChange dan set ke localStorage
                     fire.auth().onAuthStateChanged(user => {
                         user.updateProfile({
                             photoURL: response
                         }).then(() => {
                             localStorage.setItem("dataUser", JSON.stringify(user))
-                            // mengubah photoProfile di collection user
+                            // mengubah foto profil di collection user
                             fire.firestore().collection("users").doc(user.uid).update({
                                 ...update
                             })
-                            // mengubah nilai di dataUser.photoProfile
-                            .then(() => setDataUser((prevState) => ({...prevState , photoProfile: response})))
+                            // mengubah nilai di dataUser.foto_profil
+                            .then(() => setDataUser((prevState) => ({...prevState , foto_profil: response})))
                         }).catch(error => console.log(error))
                     })
                 }).catch(error => console.log("error", error))
@@ -148,14 +148,14 @@ const EditProfil = (props) => {
 
             <Form className={`${props.size.width < 920 ? '' : 'd-flex'} mt-3 p-4 rounded`} style={{ width: `${props.size.width < 950 ? '100%' : '688px'}`, backgroundColor: '#fff' }} onSubmit={submitUpdate} >
                 <div className={`${props.size.width < 660 ? 'd-flex flex-column m-auto' : ''}`} style={{ width: '230px', marginRight: '30px' }}>
-                    <img src={dataUser.photoProfile} alt="profil-preview" style={{ height: '200px', borderRadius: '8px' }} className="w-100" />
+                    <img src={dataUser.foto_profil} alt="profil-preview" style={{ height: '200px', borderRadius: '8px' }} className="w-100" />
                     <Input text="" type="file" onChange={updateImage} />
                     <p style={{ fontSize: '12px' }}>Gunakan foto dengan format .JPG , .PNG , .JPEG dengan ukuran file maksimal 3 MB</p>
                 </div>
 
                 <div style={{ width: `${props.size.width < 920 ? '100%' : '55%'}` }}>
                     <Input label="Nama Lengkap" type="text" value={dataUser.nama_lengkap} name="nama_lengkap" onChange={handleInputState} />                   
-                    <Select label="Jenis Kelamin" name="jenis_kelamin" selectedValue={dataUser.jenis_kelamin === "L" ? 'Laki-Laki' : 'Perempuan'} data={jenisKelamin} onChange={handleInputState} />
+                    <Select label="Jenis Kelamin" name="jenis_kelamin" selectedValue={dataUser.jenis_kelamin} data={jenisKelamin} onChange={handleInputState} />
                     <Input label="Asal Sekolah" type="text" value={dataUser.asal_sekolah} name="asal_sekolah" onChange={handleInputState} />                   
                     <Select label="Provinsi" name="provinsi" selectedValue={dataUser.provinsi} data={provinsi} onChange={pilihProvinsiKota} />
                     {
@@ -166,7 +166,7 @@ const EditProfil = (props) => {
                         )
                     }
                     {/* univ & jurusan sementara masih inputan biasa */}
-                    <Input label="Universitas Impian" type="text" value={dataUser.univ_impian} name="univ_impian" onChange={handleInputState} />                   
+                    <Input label="Universitas Impian" type="text" value={dataUser.universitas_impian} name="universitas_impian" onChange={handleInputState} />                   
                     <Input label="Jurusan Impian" type="text" value={dataUser.jurusan_impian} name="jurusan_impian" onChange={handleInputState} />                   
                     <Input label="No HP" type="text" value={dataUser.no_hp} name="no_hp" onChange={handleInputState} />                   
                     <Button type="submit" className="mt-3 w-100" style={{ height: '48px', backgroundColor: '#4A47D6' }} disabled={Object.keys(update).length === 0 ? true : false} >Simpan & Selesai</Button>

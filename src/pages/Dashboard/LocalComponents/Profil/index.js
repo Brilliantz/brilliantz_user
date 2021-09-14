@@ -51,7 +51,7 @@ const Profil = ({size , dataUser}) => {
                             <div style={{width: '100%' , backgroundColor: 'white' , borderRadius: '8px'}}>
                                 <div className={`${size.width < 940 ? 'p-3' : 'd-flex p-3'}`}>
                                     <div className={`${size.width < 940 ? 'm-auto foto p-2' : 'foto p-2'}`} style={{height: '100%' , width: '230px' , marginRight: '30px'}}>
-                                        <img src={data.photoProfile === null ? 'https://jdihn.jenepontokab.go.id/images/user/no-image.png' : data.photoProfile} alt="profil-preview" style={{height: '200px' , width: '205px', borderRadius: '8px'}}/>
+                                        <img src={data.foto_profil === null ? 'https://jdihn.jenepontokab.go.id/images/user/no-image.png' : data.foto_profil} alt="profil-preview" style={{height: '200px' , width: '205px', borderRadius: '8px'}}/>
                                         <Button variant="outline-secondary" className="my-3 d-flex justify-content-center" style={{width: '205px'}} onClick={() => setEditProfil(!editProfil)} > <EditIcon /> Edit Profil</Button>{' '}
                                     </div>
                                     <div className="form d-flex h-100" style={{width: '100%'}}>
@@ -63,9 +63,9 @@ const Profil = ({size , dataUser}) => {
                                             <List label="Email" data={data.email} />
                                         </ul>
                                         <ul  className="d-flex flex-column w-50">
-                                            <List label="Jenis Kelamin" data={data.jenis_kelamin === "L" ? 'Laki-Laki' : 'Perempuan'} />
+                                            <List label="Jenis Kelamin" data={data.jenis_kelamin} />
                                             <List label="Provinsi" data={data.provinsi} />
-                                            <List label="Universitas Impian" data={data.univ_impian} />
+                                            <List label="Universitas Impian" data={data.universitas_impian} />
                                             <List label="No HP / Whatsapp" data={data.no_hp} />
                                             <List label="" data="" />
                                         </ul>

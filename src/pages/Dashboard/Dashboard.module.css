@@ -22,7 +22,6 @@
   list-style: none;
   font-size: 14px;
   font-weight: 400;
-  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -32,11 +31,9 @@
 
 .list a { text-decoration: none; color: #575757; }
 
-.list a:hover { background-color: #1a83ff; color: white }
+.list a:hover { background-color: #f6f6f6; }
 
-.list a:focus { background-color: #1a83ff; color: white }
-
-.side_menu_items { width: 100%; padding: 0 10px; }
+.side_menu_items { width: 100%; padding: 0 0; }
 
 .sidebar-toggle {
   background-color: #060b26;

@@ -19,22 +19,19 @@ const Navbars = ({size}) => {
                                 window.location.pathname === "/login" || window.location.pathname === "/register" ? (
                                     <span></span>
                                 ) : (
-                                    <div>
-                                        <Navbar.Toggle />
-                                        <Navbar.Collapse className="justify-content-end">
-                                            <Navbar.Text>
-                                                {
-                                                    window.location.pathname === "/payment" ? (
-                                                        <div className="account d-flex align-items-center justify-content-end">
-                                                            <div style={{width: '32px' , height: '32px' , backgroundColor: '#FFB332' , borderRadius: '50%'}}></div>
-                                                            <span>Muhammad Ridlo</span>
-                                                        </div>
-                                                    ) : (
-                                                        <span></span>
-                                                    )
-                                                }
-                                            </Navbar.Text>
-                                        </Navbar.Collapse>
+                                    <div className="account d-flex align-items-center justify-content-end">
+                                            {/* {
+                                                window.location.pathname === "/payment" ? (
+                                                    <div className="account d-flex align-items-center justify-content-end">
+                                                        <div style={{width: '32px' , height: '32px' , backgroundColor: '#FFB332' , borderRadius: '50%'}}></div>
+                                                        <span>Muhammad Ridlo</span>
+                                                    </div>
+                                                ) : (
+                                                    <span></span>
+                                                )
+                                            } */} 
+                                        <div style={{width: '32px' , height: '32px' , backgroundImage: `url(${JSON.parse(localStorage.getItem("dataUser")).photoURL})` , borderRadius: '50%', backgroundSize: 'cover' , backgroundPosition: 'center'}}></div>
+                                        <span>{JSON.parse(localStorage.getItem("dataUser")).displayName}</span>
                                     </div>
                                 )
                             }
