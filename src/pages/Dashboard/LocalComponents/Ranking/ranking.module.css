@@ -1,16 +1,20 @@
-table {
+.breadcrumb li a{ text-decoration: none; }
+
+.table {
   width: 100%;
   border-collapse: collapse;
   background-color: transparent;
   font-size: 14px;
 }
 
-thead th {
+.th {
   text-align: left;
   border-bottom: 2px solid black;
 }
 
-thead button {
+.th_span { margin-left: 0; }
+
+.thead_button {
   border: 0;
   border-radius: none;
   font-family: inherit;
@@ -23,30 +27,15 @@ thead button {
   padding-left: 0;
 }
 
-thead button.ascending::after {
-  content: '^';
-  display: inline-block;
-  margin-left: 1em;
-  transform: rotate(180deg);
-}
-
-thead button.descending::after {
-  content: '^';
-  display: inline-block;
-  margin-left: 1em;
-}
-
-tbody td {
+.td {
   padding: 0.5em;
   border-bottom: 1px solid #ccc;
 }
 
-tbody tr:hover {
+.tr:hover {
   background-color: #eee;
 }
 
-tbody tr:nth-child(even) {
+.tr:nth-child(even) {
   background-color: #FBFBFB;
 }
-
-.breadcrumb li a{ text-decoration: none; }

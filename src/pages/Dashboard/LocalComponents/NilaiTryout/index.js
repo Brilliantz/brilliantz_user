@@ -1,48 +1,15 @@
-import React , {useState, useEffect} from 'react';
+import React , {useState} from 'react';
 import {Breadcrumb, Button} from "react-bootstrap"
-import fire from "../../../../config/firebase"
 import { SpinnerLoader } from '../../../../components';
 import DetailNilai from './DetailNilai';
-import "./nilaiTryout.css"
+import "../style.css";
+import style from "./nilaiTryout.module.css";
 
 const NilaiTryout = ({size}) => {
-    // get nilai dari collection submisi
-    const [nilai , setNilai] = useState([]);
-    const [loading , setLoading] = useState(true);
-
     // handle komponen detail nilai
     const [detailNilai , setDetailNilai] = useState(false);
     const [selectedDetail , setSelected] = useState(undefined);
-
-    // ambil data submisi dari id user , dan ambil data info tryout terutama bagian tanggal mulai dan berakhir
-    useEffect(() => {
-        // fire.firestore().collection("submisi").where("user_id", "==", // dari user id ).get()
-        fire.firestore().collection("submisi").where("user_id", "==", "AMX1JrbtPbM4zY4FPpPtQpptMEt2").get()
-        .then( (snapshot) => {
-
-            let temp = [] , waktu_mulai , waktu_akhir , mulai , akhir , obj;
-            snapshot.forEach((doc) => {
-                temp.push(doc.data())
-                // ambil data waktu mulai dan waktu berakhir => get data dari collection tryout
-                // fire.firestore().collection("tryout").doc(doc.data().tryout_id).get()
-                // .then(response => {
-                //     mulai = new Date(response.data().waktu_mulai.seconds * 1000)
-                //     waktu_mulai = `${mulai.toLocaleString("en-US", {day: "numeric"})} ${mulai.toLocaleString("en-US", {month: "long"})} ${mulai.toLocaleString("en-US", {year: "numeric"})}`
-                //     akhir = new Date(response.data().waktu_akhir.seconds * 1000)
-                //     waktu_akhir = `${akhir.toLocaleString("en-US", {day: "numeric"})} ${akhir.toLocaleString("en-US", {month: "long"})} ${akhir.toLocaleString("en-US", {year: "numeric"})}`
-                //     obj = {
-                //         ...doc.data(),
-                //         waktu_mulai,
-                //         waktu_akhir,
-                //     }
-                //     setNilai([...nilai] , obj)
-                // })
-            })
-            setNilai(temp)
-            setLoading(false)
-        })
-    } , [])
-
+    const [loading , setLoading] = useState(false);
     return (
         <div>
             {
@@ -53,7 +20,12 @@ const NilaiTryout = ({size}) => {
                         </div>
                     ) : (
                         <ItemTable
-                            products={nilai} handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
+                            items={[
+                                { id: 1, tryout: 'Tryout Saintek 1', waktu_mulai: '17 Maret 2021' , waktu_akhir: '20 Maret 2021' , jenis_tryout: 'Reguler' , rata_rata: 500 },
+                                { id: 2, tryout: 'Tryout Saintek 2', waktu_mulai: '19 Juni 2021' , waktu_akhir: '24 Juni 2021' , jenis_tryout: 'Partner' , rata_rata: 600 },
+                                { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
+                            ]} 
+                            handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
                         />
                     )
                 ) : (
@@ -99,7 +71,7 @@ const useSortableData = (items, config = null) => {
 };
 
 const ItemTable = (props) => {
-    const { items, requestSort, sortConfig } = useSortableData(props.products);
+    const { items, requestSort, sortConfig } = useSortableData(props.items);
     const getClassNamesFor = (name) => {
         if (!sortConfig) {
             return;
@@ -108,54 +80,53 @@ const ItemTable = (props) => {
     };
     return (
         <>
-            <Breadcrumb style={{ marginTop: '1rem' }} >
+            <Breadcrumb style={{ marginTop: '1rem' }} className={style.breadcrumb} >
                 <Breadcrumb.Item href="#">NILAI TRYOUT</Breadcrumb.Item>
             </Breadcrumb>
 
             <h1 style={{ fontSize: '32px' , margin: '-10px 0 20px 0'}}>Nilai Try Out</h1>
 
-            <div className="bg-white p-2">
-                <table>
+            <div className="bg-white p-3">
+                <table className={style.table}>
                     <thead>
                         <tr>
-                            <th>
-                                <span>No</span>
+                            <th className={style.th}>
+                                <span className={style.th_span}>No</span>
                             </th>
-                            <th>
-                                <span>Nama TryOut</span>
+                            <th className={style.th}>
+                                <span className={style.th_span}>Nama TryOut</span>
                             </th>
-                            <th>
-                                <span> Tanggal Mulai TryOut </span>
+                            <th className={style.th}>
+                                <span className={style.th_span}> Tanggal Mulai TryOut </span>
                             </th>
-                            <th>
-                                <span> Tanggal Berakhir TryOut </span>
+                            <th className={style.th}>
+                                <span className={style.th_span}> Tanggal Berakhir TryOut </span>
                             </th>
-                            <th>
-                                <span> Jenis TryOut </span>
+                            <th className={style.th}>
+                                <span className={style.th_span}> Jenis TryOut </span>
                             </th>
-                            <th>
+                            <th className={style.th}>
                                 <button 
                                     type="button" 
-                                    className={getClassNamesFor('rata_rata')}
+                                    className={`${getClassNamesFor('rata_rata') === "ascending" ? "ascending" : getClassNamesFor('rata_rata') === "descending" ? "descending" : "default"} ${style.thead_button}`}
                                     onClick={() => requestSort('rata_rata')}
                                 >
                                     Rata-Rata
                                 </button>
                             </th>
-                            <th></th>
+                            <th className={style.th}></th>
                         </tr>
                     </thead>
                     <tbody>
                         {items.map((item , index) => (
-                            // masih looping banyaknya data , belum di set variabel datanya
-                            <tr key={index}>
-                                <td>{index+1}</td>
-                                <td>Tryout Saintek</td>
-                                <td>10 September 2021</td>
-                                <td>11 September 2021</td>
-                                <td>Reguler</td>
-                                <td>800</td>
-                                <td>
+                            <tr className={style.tr} key={index}>
+                                <td className={style.td}>{index+1}</td>
+                                <td className={style.td}>{item.tryout}</td>
+                                <td className={style.td}>{item.waktu_mulai}</td>
+                                <td className={style.td}>{item.waktu_akhir}</td>
+                                <td className={style.td}>{item.jenis_tryout}</td>
+                                <td className={style.td}>{item.rata_rata}</td>
+                                <td className={style.td}>
                                     <Button variant="outline-secondary" onClick={() => props.handleDetail(true , index)} >Lihat Detail</Button>{' '}
                                 </td>
                             </tr>

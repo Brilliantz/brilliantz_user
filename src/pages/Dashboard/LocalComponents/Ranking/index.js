@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Breadcrumb, InputGroup, FormControl, DropdownButton, Dropdown } from "react-bootstrap"
-import "./ranking.css"
+import style from "./ranking.module.css";
+import "../style.css";
 import { SearchIcon } from "../../../../components";
 
 const Ranking = () => {
     return (
         <>
-            <ProductTable
-                products={[
-                    { id: 1, name: 'Cheese', price: 4.9, stock: 20 },
-                    { id: 2, name: 'Milk', price: 1.9, stock: 32 },
-                    { id: 3, name: 'Yoghurt', price: 2.4, stock: 12 },
-                    { id: 4, name: 'Heavy Cream', price: 3.9, stock: 9 },
-                    { id: 5, name: 'Butter', price: 0.9, stock: 99 },
-                    { id: 6, name: 'Sour Cream ', price: 2.9, stock: 86 },
-                    { id: 7, name: 'Fancy French Cheese 🇫🇷', price: 99, stock: 12 },
+            <ItemTable
+                items={[
+                    { id: 1, name: 'Muhammad Nizar', asal_sekolah: 'SMAN 1 Surabaya', nilai_tka: 550, nilai_tps: 650, rata_rata: 750 },
+                    { id: 2, name: 'Muhammad Bagus', asal_sekolah: 'SMAN 2 Surabaya', nilai_tka: 650, nilai_tps: 750, rata_rata: 850 },
+                    { id: 3, name: 'Surya Ramadhan', asal_sekolah: 'SMAN 3 Surabaya', nilai_tka: 750, nilai_tps: 850, rata_rata: 950 },
                 ]}
             />
         </>
@@ -55,8 +52,8 @@ const useSortableData = (items, config = null) => {
     return { items: sortedItems, requestSort, sortConfig };
 };
 
-const ProductTable = (props) => {
-    const { items, requestSort, sortConfig } = useSortableData(props.products);
+const ItemTable = (props) => {
+    const { items, requestSort, sortConfig } = useSortableData(props.items);
     const getClassNamesFor = (name) => {
         if (!sortConfig) {
             return;
@@ -64,13 +61,30 @@ const ProductTable = (props) => {
         return sortConfig.key === name ? sortConfig.direction : undefined;
     };
 
+    const [selectedTryout , setSelectedTryout] = useState("");
     const handleSelect = (e) => {
+        setSelectedTryout(e);
         console.log(e);
+    }
+
+    const [searchInput, setSearchInput] = useState('');
+    const [filteredResult, setFilteredResult] = useState([]);
+
+    const searchItems = (value) => {
+        setSearchInput(value)
+        if (searchInput !== '') {
+            const filteredData = items.filter((item) => {
+                return Object.values(item).join('').toLowerCase().includes(searchInput.toLowerCase())
+            })
+            setFilteredResult(filteredData);
+        } else {
+            setFilteredResult(items)
+        }
     }
 
     return (
         <>
-            <Breadcrumb style={{ marginTop: '1rem' }} >
+            <Breadcrumb style={{ marginTop: '1rem' }} className={style.breadcrumb} >
                 <Breadcrumb.Item href="#">RANKING</Breadcrumb.Item>
             </Breadcrumb>
 
@@ -85,56 +99,58 @@ const ProductTable = (props) => {
                             aria-label="Cari Nama"
                             aria-describedby="basic-addon1"
                             type="text"
+                            onChange={(e) => searchItems(e.target.value)}
                         />
                     </InputGroup>
 
                     <DropdownButton
                         alignRight
-                        title="Dropdown right"
+                        title={`${selectedTryout === "" ? "Pilih Tryout" : selectedTryout}`}
                         id="dropdown-menu-align-right"
                         onSelect={handleSelect}
+                        variant="outline-secondary"
                     >
-                        <Dropdown.Item eventKey="option-1">option-1</Dropdown.Item>
-                        <Dropdown.Item eventKey="option-2">option-2</Dropdown.Item>
-                        <Dropdown.Item eventKey="option-3">option 3</Dropdown.Item>
+                        <Dropdown.Item eventKey="TryOut Saintek 1">TryOut Saintek 1</Dropdown.Item>
+                        <Dropdown.Item eventKey="TryOut Saintek 2">TryOut Saintek 2</Dropdown.Item>
+                        <Dropdown.Item eventKey="TryOut Saintek 3">TryOut Saintek 3</Dropdown.Item>
                     </DropdownButton>
                 </div>
 
-                <table>
+                <table className={style.table}>
                     <thead>
                         <tr>
-                            <th>
-                                <span type="button">No</span>
+                            <th className={style.th}>
+                                <span className={style.th_span} type="button">No</span>
                             </th>
-                            <th>
-                                <span type="button">Nama Siswa</span>
+                            <th className={style.th}>
+                                <span className={style.th_span} type="button">Nama Siswa</span>
                             </th>
-                            <th>
-                                <span type="button">Asal SMA</span>
+                            <th className={style.th}>
+                                <span className={style.th_span} type="button">Asal SMA</span>
                             </th>
-                            <th>
+                            <th className={style.th}>
                                 <button
                                     type="button"
-                                    onClick={() => requestSort('name')}
-                                    className={getClassNamesFor('name')}
+                                    onClick={() => requestSort('nilai_tka')}
+                                    className={`${getClassNamesFor('nilai_tka') === "ascending" ? "ascending" : getClassNamesFor('nilai_tka') === "descending" ? "descending" : "default"} ${style.thead_button}`}
                                 >
                                     Nilai TKA
                                 </button>
                             </th>
-                            <th>
+                            <th className={style.th}>
                                 <button
                                     type="button"
-                                    onClick={() => requestSort('price')}
-                                    className={getClassNamesFor('price')}
+                                    onClick={() => requestSort('nilai_tps')}
+                                    className={`${getClassNamesFor('nilai_tps') === "ascending" ? "ascending" : getClassNamesFor('nilai_tps') === "descending" ? "descending" : "default"} ${style.thead_button}`}
                                 >
                                     Nilai TPS
                                 </button>
                             </th>
-                            <th>
+                            <th className={style.th}>
                                 <button
                                     type="button"
-                                    onClick={() => requestSort('stock')}
-                                    className={getClassNamesFor('stock')}
+                                    onClick={() => requestSort('rata_rata')}
+                                    className={`${getClassNamesFor('rata_rata') === "ascending" ? "ascending" : getClassNamesFor('rata_rata') === "descending" ? "descending" : "default"} ${style.thead_button}`}
                                 >
                                     Nilai Rata-Rata
                                 </button>
@@ -142,16 +158,33 @@ const ProductTable = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item, index) => (
-                            <tr key={item.id}>
-                                <td>{index + 1}</td>
-                                <td>Wahyu Puji Ramadhan</td>
-                                <td>SMA Negeri Sejahtera Surabaya Timur Tengah</td>
-                                <td>{item.name}</td>
-                                <td>${item.price}</td>
-                                <td>{item.stock}</td>
-                            </tr>
-                        ))}
+                        {searchInput.length > 1 ? (
+                            filteredResult.map((item, index) => {
+                                return (
+                                    <tr className={style.tr} key={item.id}>
+                                        <td className={style.td}>{index + 1}</td>
+                                        <td className={style.td}>{item.name}</td>
+                                        <td className={style.td}>{item.asal_sekolah}</td>
+                                        <td className={style.td}>{item.nilai_tka}</td>
+                                        <td className={style.td}>{item.nilai_tps}</td>
+                                        <td className={style.td}>{item.rata_rata}</td>
+                                    </tr>
+                                )
+                            })
+                        ) : (
+                            items.map((item, index) => {
+                                return (
+                                    <tr className={style.tr} key={item.id}>
+                                        <td className={style.td}>{index + 1}</td>
+                                        <td className={style.td}>{item.name}</td>
+                                        <td className={style.td}>{item.asal_sekolah}</td>
+                                        <td className={style.td}>{item.nilai_tka}</td>
+                                        <td className={style.td}>{item.nilai_tps}</td>
+                                        <td className={style.td}>{item.rata_rata}</td>
+                                    </tr>
+                                )
+                            })
+                        )}
                     </tbody>
                 </table>
             </div>

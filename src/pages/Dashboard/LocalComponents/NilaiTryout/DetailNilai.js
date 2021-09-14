@@ -1,12 +1,13 @@
 import React from 'react'
 import { Breadcrumb, Button, Card } from "react-bootstrap";
 import { LeftArrow } from "../../../../components";
-import "./nilaiTryout.css";
+import style from "./nilaiTryout.module.css";
 
 const DetailNilai = (props) => {
+    console.log(props.selectedDetail)
     return (
         <>
-            <Breadcrumb style={{ marginTop: '1rem' }} className="breadcrumb">
+            <Breadcrumb style={{ marginTop: '1rem' }} className={style.breadcrumb}>
                 <Breadcrumb.Item >NILAI TRYOUT</Breadcrumb.Item>
                 <Breadcrumb.Item href="#">DETAIL NILAI TRYOUT</Breadcrumb.Item>
             </Breadcrumb>
