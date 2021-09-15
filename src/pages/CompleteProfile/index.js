@@ -2,7 +2,7 @@ import React , {useState} from 'react'
 import fire from '../../config/firebase';
 import {FormComp , SuccessNotif} from "./LocalComponents";
 
-const CompleteProfile = () => {
+const CompleteProfile = ({size}) => {
     // get data from localStorage dan firestore
     let dataUser;
     // cek jika key dataUser ada datanya , get datanya
@@ -34,7 +34,7 @@ const CompleteProfile = () => {
         >
             { 
                 success === false ? ( 
-                    <FormComp success={success} handleSuccess={(valueFromChild) => handleSuccess(valueFromChild)} dataUser={dataUser} /> 
+                    <FormComp success={success} handleSuccess={(valueFromChild) => handleSuccess(valueFromChild)} dataUser={dataUser} size={size} /> 
                 ) : ( 
                     <SuccessNotif /> 
                 ) 

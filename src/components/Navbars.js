@@ -16,7 +16,7 @@ const Navbars = ({size}) => {
                                 <Logo />
                             </Navbar.Brand>
                             {
-                                window.location.pathname === "/login" || window.location.pathname === "/register" ? (
+                                window.location.pathname === "/login" || window.location.pathname === "/register" || window.location.pathname === "/forgot-pass" ? (
                                     <span></span>
                                 ) : (
                                     <div className="account d-flex align-items-center justify-content-end">

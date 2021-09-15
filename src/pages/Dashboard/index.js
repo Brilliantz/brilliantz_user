@@ -61,28 +61,28 @@ const Dashboard = ({size}) => {
                 {/* sidebar responsive */}
                 <div className={`${style.link_collapse} fixed-bottom`} style={{display: `${size.width < 660 ? 'block' : 'none'}`}} >
                     <ul className="d-flex h-100 w-100 justify-content-evenly">
-                        <li className={style.list}>
+                        <li className={style.list} onClick={() => setLinkActive("/dashboard")} style={{backgroundColor: `${linkActive === "/dashboard" ? "#EAE9FA" : "#fff"}`}} >
                             <Link to="/dashboard" className="d-flex justify-content-center flex-column p-2">
                                 <DashboardIcon />
-                                <span>Dashboard</span>
+                                <span style={{color: `${linkActive === "/dashboard" ? "#6265DC" : ""}`}}>Dashboard</span>
                             </Link>
                         </li>
-                        <li className={style.list}>
+                        <li className={style.list} onClick={() => setLinkActive("/dashboard/nilai-tryout")} style={{backgroundColor: `${linkActive === "/dashboard/nilai-tryout" ? "#EAE9FA" : "#fff"}`}}>
                             <Link to={`${url}/nilai-tryout`} className="d-flex justify-content-center flex-column p-2">
                                 <NilaiTryoutIcon />
-                                <span>Nilai Tryout</span>
+                                <span style={{color: `${linkActive === "/dashboard/nilai-tryout" ? "#6265DC" : ""}`}}>Nilai Tryout</span>
                             </Link>
                         </li>
-                        <li className={style.list}>
+                        <li className={style.list} onClick={() => setLinkActive("/dashboard/ranking")} style={{backgroundColor: `${linkActive === "/dashboard/ranking" ? "#EAE9FA" : "#fff"}`}}>
                             <Link to={`${url}/ranking`} className="d-flex justify-content-center flex-column p-2">
                                 <RankingIcon />
-                                <span>Ranking</span>
+                                <span style={{color: `${linkActive === "/dashboard/ranking" ? "#6265DC" : ""}`}}>Ranking</span>
                             </Link>
                         </li>
-                        <li className={style.list}>
+                        <li className={style.list} onClick={() => setLinkActive("/dashboard/profil")} style={{backgroundColor: `${linkActive === "/dashboard/profil" ? "#EAE9FA" : "#fff"}`}}>
                             <Link to={`${url}/profil`} className="d-flex justify-content-center flex-column p-2">
                                 <ProfilIcon />
-                                <span>Profil</span>
+                                <span style={{color: `${linkActive === "/dashboard/profil" ? "#6265DC" : ""}`}}>Profil</span>
                             </Link>
                         </li>
                     </ul>

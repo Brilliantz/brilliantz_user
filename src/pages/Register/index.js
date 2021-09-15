@@ -54,7 +54,7 @@ const Register = ({size}) => {
                         <Form className="d-flex flex-column justify-content-between" style={{height: '450px'}}>
                             <div className="text">
                                 <h1 className="mb-3" style={{fontSize: '32px'}}>Selamat Datang</h1>
-                                <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
+                                <div className="noted" style={{lineHeight: `${size.width < 1000 ? "normal" : "7px"}`}}>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Isi data diri kamu di bawah untuk melakukan registrasi.</p>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Sudah punya akun ? <span style={{color: '#4A47D6' , cursor: 'pointer' , margin: '0'}} onClick={() => history.push('/login')}>Masuk ke akunmu</span></p>
                                 </div>
@@ -99,7 +99,11 @@ const Register = ({size}) => {
                         </Form>
                     </Container>
                 </section>
-                <Slogan size={size} />
+                {size.width < 700 ? (
+                    <span></span>
+                ) : (
+                    <Slogan size={size} />
+                )}
             </section>
         </>
     )

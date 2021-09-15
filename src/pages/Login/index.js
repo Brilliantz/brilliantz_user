@@ -51,7 +51,7 @@ const Login = ({size}) => {
                         <Form className="d-flex flex-column justify-content-between">
                             <div className="text">
                                 <h1 style={{ fontSize: '32px' }} className="mb-3">Hai Ketemu Lagi</h1>
-                                <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
+                                <div className="noted" style={{lineHeight: `${size.width < 1000 ? "normal" : "7px"}`}}>
                                     <p style={{ fontSize: '14px' }} className="text-muted font-weight normal">Isi email dan password di bawah untuk login ke akunmu</p>
                                     <p style={{ fontSize: '14px' }} className="text-muted font-weight normal">Belum punya akun ? <span style={{ margin: '0', color: '#4A47D6', cursor: 'pointer' }} onClick={() => history.push('/register')}>Daftar dulu yuk</span></p>
                                 </div>
@@ -96,7 +96,11 @@ const Login = ({size}) => {
                         </Form>
                     </Container>
                 </section>
-                <Slogan size={size} />
+                {size.width < 700 ? (
+                    <span></span>
+                ) : (
+                    <Slogan size={size} />
+                )}
             </section>
         </>
     )

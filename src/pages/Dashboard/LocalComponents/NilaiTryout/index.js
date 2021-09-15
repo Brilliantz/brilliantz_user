@@ -26,6 +26,7 @@ const NilaiTryout = ({size}) => {
                                 { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
                             ]} 
                             handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
+                            size={size}
                         />
                     )
                 ) : (
@@ -127,7 +128,7 @@ const ItemTable = (props) => {
                                 <td className={style.td}>{item.jenis_tryout}</td>
                                 <td className={style.td}>{item.rata_rata}</td>
                                 <td className={style.td}>
-                                    <Button variant="outline-secondary" onClick={() => props.handleDetail(true , index)} >Lihat Detail</Button>{' '}
+                                    <Button variant="outline-secondary" className="p-1" onClick={() => props.handleDetail(true , index)} >Lihat Detail</Button>{' '}
                                 </td>
                             </tr>
                             // <tr key={item.tryout_id}>

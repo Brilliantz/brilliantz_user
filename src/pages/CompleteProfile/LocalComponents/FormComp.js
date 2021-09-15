@@ -5,7 +5,7 @@ import {SpinnerLoader} from "../../../components"
 import axios from "axios";
 import swal from "sweetalert2";
 
-const FormComp = ({ success, handleSuccess, dataUser}) => {
+const FormComp = ({ success, handleSuccess, dataUser , size}) => {
     
     // untuk preview di web , isinya obj foto profil & nama lengkap 
     const [dataPreview , setDataPrev] = useState({ photoURL: dataUser.photoURL , displayName: dataUser.displayName });
@@ -150,10 +150,10 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
     }
 
     return (
-        <div style={{ height: '935px', width: '635px' }} className="mt-4">
+        <div style={{ height: '935px', width: '635px' }} className="container my-4">
             <h1 style={{ fontSize: '32px' }}>Lengkapi Profil</h1>
-            <Form className="d-flex justify-content-between mt-3" onSubmit={sendData} encType="multipart/form-data">
-                <div className="d-flex flex-column" style={{ width: '35%' }}>
+            <Form className={size.width < 500 ? "" : "d-flex justify-content-between my-3"} onSubmit={sendData} encType="multipart/form-data">
+                <div className={`${size.width < 500 ? "m-auto" : ""} d-flex flex-column`} style={{ width: `${size.width < 500 ? "50%" : "35%"}` }}>
                     <img 
                         src={
                             photoPreview === "" ? (
@@ -169,7 +169,7 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
                     <p style={{ fontSize: '12px' }}>Gunakan foto dengan format .JPG , .PNG , .JPEG dengan ukuran file maksimal 3 MB</p>
                 </div>
 
-                <div style={{ width: '55%' }}>
+                <div style={{ width: `${size.width < 500 ? "100%" : "55%"}` }}>
                     <Input text="Nama Lengkap" type="text" filledData={dataPreview.displayName} name="nama_lengkap" onChange={(e) => {setInputs({...inputs, [e.target.name]: e.target.value}); setDataPrev({...dataPreview , displayName: e.target.value})}} />
                     <Select label="Jenis Kelamin" data={jenisKelamin} name="jenis_kelamin" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value == "L" ? "Laki-Laki" : "Perempuan"})} />
                     <Input text="Asal Sekolah" type="text" name="asal_sekolah" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />
@@ -183,7 +183,7 @@ const FormComp = ({ success, handleSuccess, dataUser}) => {
                     {
                         loadingKota ? (
                             <div>
-                                <Form.Label style={{ fontSize: '14px' }}>Kota / Kabupaten</Form.Label>
+                                <Form.Label style={{ fontSize: '14px' }}>Kota / Kabupaten</Form.Label> <br/>
                                 <SpinnerLoader text="Silahkan pilih provinsi dahulu ... " />
                             </div>
                         ) : (

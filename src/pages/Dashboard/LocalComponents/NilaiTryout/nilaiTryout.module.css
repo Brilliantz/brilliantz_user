@@ -4,6 +4,7 @@
   width: 100%;
   border-collapse: collapse;
   background-color: white;
+  font-size: 14px;
 }
 
 .th {
@@ -28,7 +29,6 @@
 
 .td {
   padding: 0.5em;
-  font-size: 14px;
   border-bottom: 1px solid #ccc;
 }
 
