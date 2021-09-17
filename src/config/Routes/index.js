@@ -25,7 +25,7 @@ const Routes = ({size}) => {
                 </Route>
                 <Route exact path="/payment">
                     <Navbars size={size} />
-                    <Payment />
+                    <Payment size={size} />
                 </Route>
                 <Route exact path="/dashboard">
                     <Dashboard size={size} />
