@@ -1,12 +1,17 @@
 import React from 'react'
 import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
-import {Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard} from "../../pages";
+import {LandingPage , Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard} from "../../pages";
 import {Navbars} from "../../components";
+import styled from "styled-components"
 
 const Routes = ({size}) => {
     return (
         <Router>
             <Switch>
+                <Route exact path="/">
+                    <Navbars size={size} />
+                    <LandingPage size={size} />
+                </Route>
                 <Route exact path="/login">
                     <Navbars size={size} />
                     <Login size={size} />
@@ -25,7 +30,7 @@ const Routes = ({size}) => {
                 </Route>
                 <Route exact path="/payment">
                     <Navbars size={size} />
-                    <Payment size={size} />
+                    <Payment size={size} container={CustomContainer} />
                 </Route>
                 <Route exact path="/dashboard">
                     <Dashboard size={size} />
@@ -34,5 +39,10 @@ const Routes = ({size}) => {
         </Router>
     )
 }
+
+const CustomContainer = styled.div`
+    width: 95%;
+    margin: auto;
+`;
 
 export default Routes

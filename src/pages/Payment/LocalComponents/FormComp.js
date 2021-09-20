@@ -7,7 +7,7 @@ import MandiriLogo from "../../../assets/MandiriLogo.png"
 import BRILogo from "../../../assets/BRILogo.png"
 import OVOLogo from "../../../assets/OVOLogo.png"
 
-const FormComp = ({ success, handleSuccess}) => {
+const FormComp = ({ success, handleSuccess , size}) => {
     const [selectedPayment , setSelectPayment] = useState("");
 
 
@@ -30,13 +30,13 @@ const FormComp = ({ success, handleSuccess}) => {
     }
 
     return (
-        <div className="d-flex" style={{ width: "536px", height: '516px', marginTop: '80px' }}>
-            <div className="back h-100" style={{ width: '15%', cursor: 'pointer' }} onClick={() => history.push('/dashboard')}>
+        <div className={`${size.width < 550 ? "" : "d-flex"}`} style={{ width: `${size.width < 500 ? "100%" : "500px"}`, height: `${size.width < 500 ? "auto" : "auto"}` }}>
+            <div className="back" style={{ width: '15%', cursor: 'pointer' }} onClick={() => history.push('/dashboard')}>
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M25.0552 14.6733H10.1618L16.6685 8.16662C17.1885 7.64661 17.1885 6.79328 16.6685 6.27328C16.4194 6.02361 16.0812 5.8833 15.7285 5.8833C15.3758 5.8833 15.0376 6.02361 14.7885 6.27328L6.00182 15.0599C5.48182 15.5799 5.48182 16.4199 6.00182 16.9399L14.7885 25.7266C15.3085 26.2466 16.1485 26.2466 16.6685 25.7266C17.1885 25.2066 17.1885 24.3666 16.6685 23.8466L10.1618 17.3399H25.0552C25.7885 17.3399 26.3885 16.7399 26.3885 16.0066C26.3885 15.2733 25.7885 14.6733 25.0552 14.6733Z" fill="#252D30" />
                 </svg>
             </div>
-            <div style={{ width: '90%' }}>
+            <div style={{ width: `${size.width < 550 ? "100%" : "85%"}` }}>
                 <Form className="d-flex flex-column w-100 h-100 justify-content-between">
                     <div className="form-area d-flex flex-column justify-content-between">
                         <div className="text">
@@ -106,8 +106,8 @@ const FormComp = ({ success, handleSuccess}) => {
                                     <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
                                         <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">1</div>
                                         <div style={{ marginLeft: '10px' }}>
-                                            Masukkan nomor rekening tujuan berikut, 0842618134
-                                            <br /> <b>a.n Zulfikar Juan Pramasta</b>.</div>
+                                            Masukkan nomor rekening tujuan berikut,
+                                            <br /> 0842618134 <b>a.n Zulfikar Juan Pramasta</b>.</div>
                                     </li>
                                     <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
                                     <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>

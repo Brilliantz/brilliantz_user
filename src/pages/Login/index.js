@@ -45,7 +45,7 @@ const Login = ({size}) => {
     const history = useHistory();
     return (
         <>
-            <section style={{ position: 'absolute', top: '80px', bottom: '0', right: '0', left: '0' }} className="d-flex">
+            <section style={{ position: 'absolute', top: '60px', bottom: '0', right: '0', left: '0' }} className="d-flex">
                 <section style={{ width: `${size.width < 700 ? '100%' : '50%'}`, height: '100%' }}>
                     <Container className="w-75 h-100 d-flex justify-content-center align-items-center">
                         <Form className="d-flex flex-column justify-content-between">
