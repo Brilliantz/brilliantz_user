@@ -1,5 +1,5 @@
 import React , {useState} from 'react'
-import { Container , Form , Button , InputGroup } from 'react-bootstrap'
+import { Container , Form , Button , InputGroup , Spinner } from 'react-bootstrap'
 import { useHistory } from 'react-router'
 import {EyeClose, Slogan , EyeOpen} from "../../components";
 import fire from "../../config/firebase";
@@ -10,6 +10,7 @@ const Register = ({size}) => {
     const [email , setEmail] = useState("")
     const [password , setPassword] = useState("")
     const [show , setShow] = useState(false);
+    const [status , setStatus] = useState(false)
 
     const submit = () => {
         swal.fire({
@@ -22,6 +23,7 @@ const Register = ({size}) => {
             if (respon.isConfirmed) {
                 fire.auth().createUserWithEmailAndPassword(email,password)
                 .then(() => {
+                    setStatus(true)
                     fire.auth().onAuthStateChanged(user => {
                         user.updateProfile({
                             displayName: name,
@@ -46,13 +48,13 @@ const Register = ({size}) => {
     const history = useHistory();
     return (
         <>
-            <section style={{position: 'absolute' , top: '80px' , bottom: '0' , right: '0' , left: '0'}} className="d-flex">
-                <section style={{width: '50%' , height: '100%'}}>
+            <section style={{position: 'absolute' , top: '60px' , bottom: '0' , right: '0' , left: '0'}} className="d-flex">
+                <section style={{width: `${size.width < 700 ? '100%' : '50%'}` , height: '100%'}}>
                     <Container  className="w-75 h-100 d-flex justify-content-center align-items-center">
                         <Form className="d-flex flex-column justify-content-between" style={{height: '450px'}}>
                             <div className="text">
                                 <h1 className="mb-3" style={{fontSize: '32px'}}>Selamat Datang</h1>
-                                <div className="noted" style={{lineHeight: `${size.width < 890 ? "normal" : "7px"}`}}>
+                                <div className="noted" style={{lineHeight: `${size.width < 1000 ? "normal" : "7px"}`}}>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Isi data diri kamu di bawah untuk melakukan registrasi.</p>
                                     <p className="text-muted font-weight normal" style={{fontSize: '14px'}}>Sudah punya akun ? <span style={{color: '#4A47D6' , cursor: 'pointer' , margin: '0'}} onClick={() => history.push('/login')}>Masuk ke akunmu</span></p>
                                 </div>
@@ -85,13 +87,23 @@ const Register = ({size}) => {
                             </div>
 
                             <Button className="mt-3 w-100" style={{height: '48px' , backgroundColor: '#4A47D6'}} onClick={() => submit()} >
-                                Registrasi Akun
+                                {
+                                    status ? (
+                                        <Spinner animation="border" variant="light" />
+                                    ) : (
+                                        <span>Registrasi Akun</span>
+                                    )
+                                }
                             </Button>
                             
                         </Form>
                     </Container>
                 </section>
-                <Slogan />
+                {size.width < 700 ? (
+                    <span></span>
+                ) : (
+                    <Slogan size={size} />
+                )}
             </section>
         </>
     )

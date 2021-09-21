@@ -1,0 +1,21 @@
+/* settingan untuk table */
+thead button.default::after {
+    content: '-';
+    display: inline-block;
+    margin-left: 1em;
+    transform: rotate(180deg);
+}
+  
+thead button.ascending::after {
+    content: '^';
+    display: inline-block;
+    margin-left: 1em;
+    transform: rotate(180deg);
+}
+  
+thead button.descending::after {
+    content: '^';
+    display: inline-block;
+    margin-left: 1em;
+}
+  
