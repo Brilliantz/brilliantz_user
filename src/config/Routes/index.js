@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
+import {BrowserRouter as Router , Route , Switch , Redirect} from "react-router-dom";
 import {LandingPage , Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard} from "../../pages";
 import {Navbars} from "../../components";
 import styled from "styled-components"
@@ -34,6 +34,9 @@ const Routes = ({size}) => {
                 </Route>
                 <Route exact path="/dashboard">
                     <Dashboard size={size} />
+                </Route>
+                <Route exact path="*">
+                    {localStorage.key("dataUser") ? <Redirect to="/dashboard" /> : <Redirect to="/login" /> }
                 </Route>
             </Switch>
         </Router>
