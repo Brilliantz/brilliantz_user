@@ -7,7 +7,6 @@ import style from "../../../Dashboard.module.css";
 
 const ProgramList = () => {
 
-
     return (
         <div>
             {/* breadcrumb */}
@@ -26,8 +25,8 @@ const ProgramList = () => {
                     <ProgramBought />
                 </div>
             </div>
-            <div className="row mt-4">
-                <div className="col">
+            <div className="row mt-4 ">
+                <div className="col mb-5">
                     <OtherProgram />
                 </div>
             </div>

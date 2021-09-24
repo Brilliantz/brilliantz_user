@@ -1,6 +1,6 @@
-import React from 'react';
+import React , {useState , useEffect} from 'react'
 import { Breadcrumb } from 'react-bootstrap';
-import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail} from "./LocalComponents";
+import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail, TryOutDetail} from "./LocalComponents";
 
 import {
     BrowserRouter as Router, 
@@ -11,9 +11,24 @@ import {
     useHistory, 
     useRouteMatch
 } from "react-router-dom";
-
+import fire from "../../../../config/firebase";
 
 const DashboardView = () => {
+    const [programsData , setprogramsData] = useState([]);
+
+    useEffect(() => {
+        fire.firestore().collection("webinar").get()
+        .then(webinars => {
+            let tempWebinarArray = [];
+
+            webinars.docs.forEach((item)=>{
+                tempWebinarArray.push(item.data());
+            })
+            setprogramsData(tempWebinarArray); 
+        })
+        .catch(error => { console.log("error" , error) });
+    } , []);
+
     let {path , url} = useRouteMatch();
     const history = useHistory();
 
@@ -24,7 +39,7 @@ const DashboardView = () => {
                 <Router>
                     <Switch>
                         <Route exact path={path}>
-                            <ProgramList />
+                            <ProgramList otherPrograms={programsData} />
                         </Route>
                         <Route exact path={`${path}/:choose`}>
                             <Content />
@@ -53,6 +68,8 @@ const Content = () => {
                     <OtherProgramList />
                 ) : choose === "webinar-detail" ? (
                     <WebinarDetail />
+                ) : choose === "tryout-detail" ? (
+                    <TryOutDetail />
                 ) : (
                     <span>Choose</span>
                 )

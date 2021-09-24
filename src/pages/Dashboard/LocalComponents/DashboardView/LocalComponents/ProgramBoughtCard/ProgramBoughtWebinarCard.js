@@ -13,35 +13,53 @@ const ProgramBoughtWebinarCard = ({ webinarDetail }) => {
     return (
         <>
                 <Card style={{ borderRadius:'8px' }}>
-                    <Card.Img style={{ maxHeight: '250px' }} variant="top" src="holder.js/100px180" />
+                    <Card.Img style={{ maxHeight: '195px' }} variant="top" src={ webinarDetail.poster_webinar } alt="poster webinar"/>
                     <Card.Body className="pb-0">
                         <Card.Title as="h6">
-                            <strong>{ webinarDetail.programTitle }</strong>
+                            <strong>{ webinarDetail.nama_webinar }</strong>
                         </Card.Title>
                         <div id={ style.date_schedule } className="row">
-                            <div className="col">
-                                <Calendar fill="#4A47D6"  classProps="mr-1"/> { webinarDetail.programDate }
+                            <div className="col-sm-7">
+                                <Calendar fill="#4A47D6"  classProps=""/> { webinarDetail.tanggal }
                             </div>
-                            <div className="col d-flex flex-row-reverse">
-                                { webinarDetail.programStartTime } - { webinarDetail.programEndTime } WIB <Schedule fill="#4A47D6"  classProps="mr-1"/> 
+                            <div className="col-sm-5 d-flex flex-row-reverse">
+                                {/* { `${startTimeHours}:${startTimeMinutes}` } - { `${endTimeHours}:${endTimeMinutes}` } WIB <Schedule fill="#4A47D6"  classProps="mr-1"/>  */}
+                                { webinarDetail.waktu_mulai }-{ webinarDetail.waktu_akhir } WIB <Schedule fill="#4A47D6"  classProps="mr-1"/> 
                             </div>
                         </div>
+                        <hr className="mb-0 mt-0" style={{ height:"0.5px" }} />
                         <hr className="mb-2" style={{ height:"0.5px" }} />
                         <div className="row">
-                            <div className="col-sm">
-                                <small style={{ color:"#867A7A" }} className="text-muted">
-                                    Status:
-                                </small>
-                                <p id={ style.webinar_waiting }>
-                                    Menunggu Pembayaran
-                                </p>
-                            </div>
+                            {
+                                webinarDetail.paid === true ? 
+                                <div className="col-sm">
+                                    <small>&nbsp;</small>
+                                    <p>&nbsp;</p>
+                                </div>
+                                :
+                                <div className="col-sm">
+                                    <small style={{ color:"#867A7A" }} className="text-muted">
+                                        Status:
+                                    </small>
+                                    <p id={ style.webinar_waiting_payment }>
+                                        Menunggu Pembayaran
+                                    </p>
+                                </div>
+                            }
+
                             <div className="col-sm text-right pt-1">
-                                <Link to={ `${url}/webinar-detail` } >
-                                    <button id={ style.button_konference_disabled } className="btn p-2 px-3" type="button" disabled>
+                            {
+                                webinarDetail.paid === true ? 
+                                <Link to="" >
+                                    <button id={ style.button_konference } className="btn p-2 px-3" type="button">
                                         Masuk Konference
                                     </button>
                                 </Link>
+                                :
+                                <button id={ style.button_konference_disabled } className="btn p-2 px-3" type="button" disabled>
+                                    Masuk Konference
+                                </button>
+                            }
                             </div>
                         </div>
                     </Card.Body>

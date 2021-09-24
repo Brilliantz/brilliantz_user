@@ -2,7 +2,13 @@ import React from 'react';
 import { Breadcrumb, Card, Button} from 'react-bootstrap';
 import OtherProgram from './OtherProgram';
 import style from "../../../Dashboard.module.css";
-
+import { OtherProgramTryOutCard, OtherProgramWebinarCard } from "./OtherProgramCard/index";
+import {
+    Link, 
+    useRouteMatch
+} from "react-router-dom";
+import posterWebinar from "../../../../../assets/PosterWebinar.png"
+import PosterTryout from "../../../../../assets/PosterTryout.png"
 
 const OtherProgramList = () => {
 
@@ -32,12 +38,12 @@ const OtherProgramList = () => {
 }
 
 const OtherProgramCard = () => {
-
+    let {path , url} = useRouteMatch();
 
     const programsData = [
-        { id: 1, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
-        { id: 2, programType: "tryout", programTitle: "TO 2", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
-        { id: 3, programType: "webinar", programTitle: "Webinar 2", programDate: "Kamis, 24 Juli 2021", programStartTime: "14:00", programEndTime: "16:00", paid: false},
+        { id: 1, nama_tryout: "TO 1", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: 2, nama_tryout: "TO 2", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: 3, nama_webinar: "Webinar 2", tanggal: "Kamis, 24 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar},
     ]
 
     return (
@@ -52,101 +58,19 @@ const OtherProgramCard = () => {
                 </Card.Header>
                 <hr className="mt-0"/>
                 <Card.Body>
-                    <ProgramCard programs={programsData}></ProgramCard>
+                    <div className="row"> 
+                        <div className="col-lg-4">
+                            <OtherProgramTryOutCard tryOutDetail={ programsData[0] } ></OtherProgramTryOutCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <OtherProgramTryOutCard tryOutDetail={ programsData[1] } ></OtherProgramTryOutCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <OtherProgramWebinarCard webinarDetail={ programsData[2] }></OtherProgramWebinarCard>
+                        </div>
+                    </div>
                 </Card.Body>
             </Card>
-        </>
-    )
-}
-
-const ProgramCard = ({ programs }) => {
-    return (
-        <>  
-            <div className="row"> 
-                <div className="col-lg-4">
-                    <TryoutCard programDetail={programs[0]}></TryoutCard>
-                </div>
-                <div className="col-lg-4">
-                    <TryoutCard programDetail={programs[1]}></TryoutCard>
-                </div>
-                <div className="col-lg-4">
-                    <WebinarCard programDetail={programs[2]}></WebinarCard>
-                </div>
-            </div>
-        </>
-    )
-}
-
-const WebinarCard = ({ programDetail }) => {
-    const paymentStatus = programDetail.paid;
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                            <div className="col d-flex flex-row-reverse">
-                                {programDetail.programStartTime} - {programDetail.programEndTime} WIB
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="row">
-                            <div className="col-sm">
-                                    Biaya Pendaftaran:
-                                    <br />
-                                <small>15.000</small>
-                            </div>
-                            <div className="col-sm text-right">
-                                <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Daftar</Button>    
-                                &nbsp;
-                                <button id={style.button_detail} className="btn" type="button">
-                                    Detail
-                                </button>
-                            </div>
-                        </div>
-                    </Card.Body>
-                </Card>
-        </>
-    )
-}
-
-const TryoutCard = ({ programDetail }) => {
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="row">
-                            <div className="col-sm">
-                                    Biaya Pendaftaran:
-                                    <br />
-                                <small>15.000</small>
-                            </div>
-                            <div className="col-sm text-right">
-                                <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Daftar</Button>    
-                                &nbsp;
-                                <button id={style.button_detail} className="btn" type="button">
-                                    Detail
-                                </button>
-                            </div>
-                        </div>
-                    </Card.Body>
-                </Card>
         </>
     )
 }

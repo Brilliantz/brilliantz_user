@@ -54,7 +54,25 @@
     color: #575757;
 }
 
-#webinar_waiting {
+#webinar_waiting_payment {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4A47D6;
+}
+
+#tryout {
+    font-size: 14px;
+    font-weight: 600;
+    color: #BDBDBD;
+}
+
+#tryout_done {
+    font-size: 14px;
+    font-weight: 600;
+    color: #00C689;
+}
+
+#tryout_waiting_payment {
     font-size: 14px;
     font-weight: 600;
     color: #4A47D6;

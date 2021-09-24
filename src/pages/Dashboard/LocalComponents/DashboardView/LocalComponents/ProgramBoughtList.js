@@ -1,6 +1,14 @@
 import React from 'react';
 import { Breadcrumb, Card, Button} from 'react-bootstrap';
 import style from "../../../Dashboard.module.css";
+import ProgramBought from './ProgramBought';
+import { ProgramBoughtTryOutCard, ProgramBoughtWebinarCard } from "./ProgramBoughtCard/index";
+import {
+    Link, 
+    useRouteMatch
+} from "react-router-dom";
+import posterWebinar from "../../../../../assets/PosterWebinar.png"
+import PosterTryout from "../../../../../assets/PosterTryout.png"
 
 
 const ProgramBoughtList = () => {
@@ -31,11 +39,12 @@ const ProgramBoughtList = () => {
 }
 
 const ProgramBoughtCard = () => {
+    let {path , url} = useRouteMatch();
 
     const programsData = [
-        { id: 1, programType: "webinar", programTitle: "Webinar 1", programDate: "Kamis, 22 Juli 2021", programStartTime: "08:00", programEndTime: "10:00", paid: true},
-        { id: 2, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
-        { id: 3, programType: "webinar", programTitle: "Webinar 2", programDate: "Kamis, 24 Juli 2021", programStartTime: "14:00", programEndTime: "16:00", paid: false},
+        { id: 1, nama_webinar: "Webinar 1", tanggal: "Kamis, 1 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar, paid: true},
+        { id: 2, nama_tryout: "TO 2", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: 3, nama_webinar: "Webinar 2", tanggal: "Kamis, 24 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar, paid: false},
     ]
 
     return (
@@ -50,83 +59,19 @@ const ProgramBoughtCard = () => {
                 </Card.Header>
                 <hr className="mt-0"/>
                 <Card.Body>
-                    <ProgramCard programs={programsData}></ProgramCard>
+                    <div className="row"> 
+                        <div className="col-lg-4">
+                            <ProgramBoughtWebinarCard webinarDetail={ programsData[0] }></ProgramBoughtWebinarCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <ProgramBoughtTryOutCard tryOutDetail={ programsData[1] }></ProgramBoughtTryOutCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <ProgramBoughtWebinarCard webinarDetail={ programsData[2] }></ProgramBoughtWebinarCard>
+                        </div>
+                    </div>
                 </Card.Body>
             </Card>
-        </>
-    )
-}
-
-const ProgramCard = ({ programs }) => {
-    return (
-        <>  
-            <div className="row"> 
-                <div className="col-lg-4">
-                    <WebinarCard programDetail={programs[0]}></WebinarCard>
-                </div>
-                <div className="col-lg-4">
-                    <TryoutCard programDetail={programs[1]}></TryoutCard>
-                </div>
-                <div className="col-lg-4">
-                    <WebinarCard programDetail={programs[2]}></WebinarCard>
-                </div>
-            </div>
-        </>
-    )
-}
-
-const WebinarCard = ({ programDetail }) => {
-    const paymentStatus = programDetail.paid;
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                            <div className="col d-flex flex-row-reverse">
-                                {programDetail.programStartTime} - {programDetail.programEndTime} WIB
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="d-flex flex-row-reverse">
-                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Masuk Conference</Button>
-                        </div>
-                    </Card.Body>
-                </Card>
-        </>
-    )
-}
-
-const TryoutCard = ({ programDetail }) => {
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="d-flex flex-row-reverse">
-                            <button id={style.button_detail} className="btn" type="button">
-                                Detail
-                            </button>
-                            &nbsp;
-                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Kerjakan</Button>
-                        </div>
-                    </Card.Body>
-                </Card>
         </>
     )
 }

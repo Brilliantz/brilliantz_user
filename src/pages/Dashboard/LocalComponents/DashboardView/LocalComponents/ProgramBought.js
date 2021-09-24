@@ -6,14 +6,16 @@ import {
     Link, 
     useRouteMatch
 } from "react-router-dom";
+import posterWebinar from "../../../../../assets/PosterWebinar.png"
+import PosterTryout from "../../../../../assets/PosterTryout.png"
 
 const ProgramBought = () => {
     let {path , url} = useRouteMatch();
 
     const programsData = [
-        { id: 1, programType: "webinar", programTitle: "Webinar 1", programDate: "Kamis, 22 Juli 2021", programStartTime: "08:00", programEndTime: "10:00", paid: true},
-        { id: 2, programType: "tryout", programTitle: "TO 1", programDate: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", programStartTime: "", programEndTime: "", paid: true},
-        { id: 3, programType: "webinar", programTitle: "Webinar 2", programDate: "Kamis, 24 Juli 2021", programStartTime: "14:00", programEndTime: "16:00", paid: false},
+        { id: 1, nama_webinar: "Webinar 1", tanggal: "Kamis, 1 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar, paid: true},
+        { id: 2, nama_tryout: "TO 2", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: 3, nama_webinar: "Webinar 2", tanggal: "Kamis, 24 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar, paid: false},
     ]
 
     return (
@@ -26,8 +28,8 @@ const ProgramBought = () => {
                         </div>
                         <div className="col d-flex flex-row-reverse">
 
-                        <Link to={`${url}/program-bought`} >
-                            <span className="text-decoration-none" style={{color: '#4A47D6'}}>
+                        <Link to={`${url}/program-bought`} className="text-decoration-none" >
+                            <span style={{color: '#4A47D6'}}>
                                 Lihat Semua
                             </span>
                         </Link>
@@ -38,27 +40,19 @@ const ProgramBought = () => {
                 </Card.Header>
                 <hr className="mt-0"/>
                 <Card.Body>
-                    <ProgramCard programs={programsData}></ProgramCard>
+                    <div className="row"> 
+                        <div className="col-lg-4">
+                            <ProgramBoughtWebinarCard webinarDetail={ programsData[0] }></ProgramBoughtWebinarCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <ProgramBoughtTryOutCard tryOutDetail={ programsData[1] }></ProgramBoughtTryOutCard>
+                        </div>
+                        <div className="col-lg-4">
+                            <ProgramBoughtWebinarCard webinarDetail={ programsData[2] }></ProgramBoughtWebinarCard>
+                        </div>
+                    </div>
                 </Card.Body>
             </Card>
-        </>
-    )
-}
-
-const ProgramCard = ({ programs }) => {
-    return (
-        <>  
-            <div className="row"> 
-                <div className="col-lg-4">
-                    <ProgramBoughtWebinarCard webinarDetail={programs[0]}></ProgramBoughtWebinarCard>
-                </div>
-                <div className="col-lg-4">
-                    <ProgramBoughtTryOutCard tryOutDetail={programs[1]}></ProgramBoughtTryOutCard>
-                </div>
-                <div className="col-lg-4">
-                    <ProgramBoughtWebinarCard webinarDetail={programs[2]}></ProgramBoughtWebinarCard>
-                </div>
-            </div>
         </>
     )
 }
