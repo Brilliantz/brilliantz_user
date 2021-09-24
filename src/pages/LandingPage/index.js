@@ -23,7 +23,7 @@ const LandingPage = ({ size }) => {
             <Kolaborasi size={size} />
 
             {/* footer area */}
-            {/* <Footer size={size} /> */}
+            <Footer size={size} />
         </div>
     )
 }

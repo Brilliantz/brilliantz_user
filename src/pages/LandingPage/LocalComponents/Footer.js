@@ -1,14 +1,14 @@
 import React from 'react'
 import { Logo, InstagramIcon, LinkedInIcon } from '../../../components'
-import { Accordion } from 'react-bootstrap'
+import { Accordion , Container } from 'react-bootstrap'
 
 const Footer = ({ container, size }) => {
-    const CustomContainer = container
+    // const CustomContainer = container
     return (
         <div>
             {
                 size.width < 650 ? (
-                    <CustomContainer className="px-3">
+                    <Container className="px-3">
                         <footer className="py-5 mt-5">
                             <div className="d-flex flex-column mb-3">
                                 <Logo />
@@ -44,7 +44,7 @@ const Footer = ({ container, size }) => {
                                 </Accordion.Item>
                             </Accordion>
                         </footer>
-                    </CustomContainer>
+                    </Container>
                 ) : (
                     <div className="container">
                         <footer className="d-flex py-5 mt-5 justify-content-evenly">
