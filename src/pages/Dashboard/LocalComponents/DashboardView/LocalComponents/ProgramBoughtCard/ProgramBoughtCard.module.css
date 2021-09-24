@@ -1,0 +1,61 @@
+#button_detail {
+    color: #4A47D6;
+    border:#4A47D6 1px solid;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    margin: 0px 0px 0px 6px;
+}
+
+#button_detail:hover {
+    color: #ffffff;
+    background-color: #4A47D6;
+}
+
+#button_pengerjaan {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #4A47D6;
+    border: 0px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+#button_pengerjaan_disabled {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #BDBDBD;
+    border: 0px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+#button_konference {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #4A47D6;
+    border: 0px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+#button_konference_disabled {
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #BDBDBD;
+    border: 0px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+#date_schedule {
+    font-weight: 600;
+    font-size: 14px;
+    color: #575757;
+}
+
+#webinar_waiting {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4A47D6;
+}

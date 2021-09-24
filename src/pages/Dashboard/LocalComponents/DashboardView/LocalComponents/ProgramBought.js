@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button , Card} from 'react-bootstrap'
+import { ProgramBoughtTryOutCard, ProgramBoughtWebinarCard } from "./ProgramBoughtCard/index";
 import style from "./ProgramBought.module.css";
 import {
     Link, 
@@ -49,71 +50,15 @@ const ProgramCard = ({ programs }) => {
         <>  
             <div className="row"> 
                 <div className="col-lg-4">
-                    <WebinarCard programDetail={programs[0]}></WebinarCard>
+                    <ProgramBoughtWebinarCard webinarDetail={programs[0]}></ProgramBoughtWebinarCard>
                 </div>
                 <div className="col-lg-4">
-                    <TryoutCard programDetail={programs[1]}></TryoutCard>
+                    <ProgramBoughtTryOutCard tryOutDetail={programs[1]}></ProgramBoughtTryOutCard>
                 </div>
                 <div className="col-lg-4">
-                    <WebinarCard programDetail={programs[2]}></WebinarCard>
+                    <ProgramBoughtWebinarCard webinarDetail={programs[2]}></ProgramBoughtWebinarCard>
                 </div>
             </div>
-        </>
-    )
-}
-
-const WebinarCard = ({ programDetail }) => {
-    const paymentStatus = programDetail.paid;
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                            <div className="col d-flex flex-row-reverse">
-                                {programDetail.programStartTime} - {programDetail.programEndTime} WIB
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="d-flex flex-row-reverse">
-                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Masuk Conference</Button>
-                        </div>
-                    </Card.Body>
-                </Card>
-        </>
-    )
-}
-
-const TryoutCard = ({ programDetail }) => {
-    return (
-        <>
-                <Card>
-                    <Card.Img style={{maxHeight: '250px'}} variant="top" src="holder.js/100px180" />
-                    <Card.Body>
-                        <Card.Title as="h6">
-                            <strong>{programDetail.programTitle}</strong>
-                        </Card.Title>
-                        <div className="row" style={{fontSize: '14px'}}>
-                            <div className="col">
-                                {programDetail.programDate}
-                            </div>
-                        </div>
-                        <hr />
-                        <div className="d-flex flex-row-reverse">
-                            <button id={style.button_detail} className="btn" type="button">
-                                Detail
-                            </button>
-                            &nbsp;
-                            <Button className="border-0" style={{backgroundColor: '#4A47D6'}}>Kerjakan</Button>
-                        </div>
-                    </Card.Body>
-                </Card>
         </>
     )
 }
