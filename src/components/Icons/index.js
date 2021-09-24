@@ -13,6 +13,8 @@ import Feature2 from "./Feature2";
 import Feature3 from "./Feature3";
 import LinkedInIcon from "./LinkedIn.icon";
 import InstagramIcon from "./Instagram.icon";
+import Calendar from "./Calendar";
+import Schedule from "./Schedule";
 
 export {
     DashboardIcon , 
@@ -29,5 +31,7 @@ export {
     Feature2,
     Feature3,
     LinkedInIcon,
-    InstagramIcon
+    InstagramIcon,
+    Calendar,
+    Schedule,
 };
