@@ -1,4 +1,6 @@
-.breadcrumb li a{ text-decoration: none; }
+.breadcrumb { margin-bottom: 2rem; }
+.breadcrumb ol { background-color: transparent; }
+.breadcrumb li a{ text-decoration: none; color: #4A47D6 }
 
 .table {
   width: 100%;
