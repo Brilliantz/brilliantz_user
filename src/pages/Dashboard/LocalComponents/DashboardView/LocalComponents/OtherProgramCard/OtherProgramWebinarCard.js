@@ -58,11 +58,11 @@ const OtherProgramWebinarCard = ({ webinarDetail }) => {
                                 </p>
                             </div>
                             <div className="col-sm text-right pt-1">
-                                <Link to="#" >
-                                    <button id={ style.button_daftar } className="btn p-2 px-3" type="button">
+                                {/* <Link to="#" > */}
+                                    <button id={ style.button_daftar } className="btn p-2 px-3" type="button" onClick={() => window.location.href = "/payment/key-webinar"}>
                                         Daftar
                                     </button>
-                                </Link>
+                                {/* </Link> */}
                                 <Link to={ `${url}/webinar-detail` } >
                                     <button id={ style.button_detail } className="btn p-2 px-3" type="button">
                                         Detail

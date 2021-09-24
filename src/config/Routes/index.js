@@ -28,11 +28,11 @@ const Routes = ({size}) => {
                     <Navbars size={size} />
                     <CompleteProfile size={size} />
                 </Route>
-                <Route exact path="/payment">
+                <Route path="/payment">
                     <Navbars size={size} />
                     <Payment size={size} container={CustomContainer} />
                 </Route>
-                <Route exact path="/dashboard">
+                <Route path="/dashboard">
                     <Dashboard size={size} />
                 </Route>
                 <Route exact path="*">
