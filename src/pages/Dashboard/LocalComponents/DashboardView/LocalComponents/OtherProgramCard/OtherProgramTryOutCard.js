@@ -37,7 +37,7 @@ const OtherProgramTryoutCard = ({ tryOutDetail }) => {
                             </div>
                             <div className="col-sm text-right pt-1">
                                 {/* <Link to="#" > */}
-                                    <button id={ style.button_daftar } className="btn p-2 px-3" type="button" onClick={() => window.location.href = "/payment/key-tryout"}>
+                                    <button id={ style.button_daftar } className="btn p-2 px-3" type="button" onClick={() => window.location.href = "/payment/tryout/key-tryout"}>
                                         Daftar
                                     </button>
                                 {/* </Link> */}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap'
+import { Navbar, Nav, NavDropdown, Container, NavbarBrand } from 'react-bootstrap'
 import Logo from "./Logo";
 import styled from "styled-components";
 import { useHistory } from 'react-router';
@@ -17,7 +17,7 @@ const Navbars = ({ size }) => {
                     <Navbar bg="white" expand="lg" className="border" fixed="top">
                         {
                             // set layout saat pathname di login , register , forgot-pass , payment 
-                            pathname === "/login" || pathname === "/register" || pathname === "/forgot-pass" || pathname === "/payment" ? (
+                            pathname === "/login" || pathname === "/register" || pathname === "/forgot-pass" || pathname === "/payment/tryout/key-tryout" ? (
                                 <CustomContainer className="d-flex justify-content-between align-items-center">
                                     <Navbar.Brand href="/"><Logo /></Navbar.Brand>
                                     {
@@ -57,7 +57,15 @@ const Navbars = ({ size }) => {
                                             </div>
                                         </Navbar.Collapse>
                                     </Container>
-                                ) : (<div></div>)
+                                ) : (
+                                    pathname === "/in-exam" ? (
+                                        <Container className="d-flex justify-content-between">
+                                            <Navbar.Brand href="/"><Logo /></Navbar.Brand>
+                                            <span style={{fontSize: "24px" , fontWeight: "bold"}}>TryOut Saintek 1 / Penalaran Umum</span>
+                                            <span></span>
+                                        </Container>
+                                    ) : (<div></div>)
+                                )
                             )
                         }
                     </Navbar>
