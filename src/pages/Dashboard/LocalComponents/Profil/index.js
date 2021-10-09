@@ -19,7 +19,7 @@ const Profil = ({size , dataUser}) => {
             }
         })
         .catch(error => { console.log("error" , error) })
-    } , [])
+    } , [dataUser])
 
     const signOut = () => {
         fire.auth().signOut()

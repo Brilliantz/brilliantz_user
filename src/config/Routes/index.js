@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter as Router , Route , Switch , Redirect} from "react-router-dom";
+import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
 import {LandingPage , Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard, InExam} from "../../pages";
 import {Navbars} from "../../components";
 import styled from "styled-components"
@@ -12,26 +12,32 @@ const Routes = ({size}) => {
                     <Navbars size={size} />
                     <LandingPage size={size} />
                 </Route>
-                <Route exact path="/login">
+                <Route path="/login">
                     <Navbars size={size} />
                     <Login size={size} />
                 </Route>
-                <Route exact path="/register">
+                <Route path="/register">
                     <Navbars size={size} />
                     <Register size={size} />
                 </Route>
-                <Route exact path="/forgot-pass">
+                <Route path="/forgot-pass">
                     <Navbars size={size} />
                     <ForgotPassword />
                 </Route>
-                <Route exact path="/complete-profile">
+                <Route path="/complete-profile">
                     <Navbars size={size} />
                     <CompleteProfile size={size} />
                 </Route>
-                <Route path="/payment/tryout/key-tryout">
+                
+                <Route path="/payment/webinar/:key">
                     <Navbars size={size} />
                     <Payment size={size} container={CustomContainer} />
                 </Route>
+                <Route path="/payment/tryout/:key">
+                    <Navbars size={size} />
+                    <Payment size={size} container={CustomContainer} />
+                </Route>
+                
                 <Route path="/dashboard">
                     <Dashboard size={size} />
                 </Route>

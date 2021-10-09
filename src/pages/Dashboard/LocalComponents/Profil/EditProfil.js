@@ -102,7 +102,7 @@ const EditProfil = (props) => {
                 setKota(res.data)
             })
         })
-    },[])
+    },[dataUser])
 
     const pilihProvinsiKota = (e) => {
         e.preventDefault();

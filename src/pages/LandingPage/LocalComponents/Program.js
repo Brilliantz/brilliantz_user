@@ -2,8 +2,7 @@ import React from 'react'
 import { Container } from 'react-bootstrap';
 import { Feature1, Feature2, Feature3 } from "../../../components";
 
-const Program = ({ container , size }) => {
-    const CustomContainer = container;
+const Program = ({ size }) => {
     return (
         <div className="bg-light py-5" id="program">
             <Container className="px-3">
