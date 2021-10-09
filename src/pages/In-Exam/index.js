@@ -3,31 +3,47 @@ import { Button, ListGroup } from "react-bootstrap";
 import fire from "../../config/firebase";
 
 const InExam = () => {
+    // logic di komponent ini : 
+    // - semua jawaban di simpan di localStorage dulu , terus di akhir soal ada tombol kirim jawaban , nah jawaban dari localStorage itu di looping 1 1 , di post ke firebase
+    //   kalo di simpan dulu di localStorage , kalau ada case user mengganti jawabannya , logic & responnya bisa lebih cepat
+
+    // - setiap user habis memilih jawaban , akan langsung dikirim ke firebase jawabannya , tapi itu agak susah kalo usernya mau ganti jawaban
+
+    // dataUser ini datanya diambil dari localStorage buat dipakai uid nya, untuk data field collection jawaban , 
+    // karena disana cuman ada tryout_id aja
+    const [dataUser , setDataUser] = useState({})
+
     const [dataSoal, setDataSoal] = useState([]);
     const [soalTerpilih, setSoalTerpilih] = useState(0);
     const [loading, setLoading] = useState(true);
-    
-    const [chooseAnswer, setChooseAnswer] = useState(undefined)
 
-    // dibuat aja nilai defaultnya array kosong 
     const [dataLocalStorage , setLocalStorage] = useState([])
     
     useEffect(() => {
-        let temp = []
+        if (localStorage.key("dataUser")) {
+            setDataUser(JSON.parse(localStorage.getItem("dataUser")))
+        }
         fire.firestore().collection("tryout").doc("8rMpLO1vfy3IzzulsQcq").collection("penalaran_umum").get()
             .then(response => {
-                response.forEach(doc => temp.push(doc.data()))
+                let temp = []
+                let obj;
+                response.forEach(doc => {
+                    obj = {
+                        ...doc.data(),
+                        jawaban: "",
+                        beban: 0,
+                    }
+                    temp.push(obj)
+                })
                 temp.sort(compare)
                 setDataSoal(temp)
+                if (localStorage.key("jawaban")) {
+                    // jika di localStorage ada key jawaban , get data nya , yg nantinya berbentuk array
+                    setLocalStorage(JSON.parse(localStorage.getItem("jawaban")))
+                }
                 setLoading(false)
             })
             .catch(err => console.error(err))
-
-        if (localStorage.key("dataJawaban")) {
-            // jika di localStorage ada key dataJawaban , get data nya , yg nantinya berbentuk array
-            setLocalStorage(JSON.parse(localStorage.getItem("dataJawaban")))
-        }
-
     }, [])
 
     // fungsi untuk sort array dataSoal
@@ -42,23 +58,36 @@ const InExam = () => {
     }
 
     const choosingAnswer = (answerLetter) => {
-        let obj = {
-            beban: 0,
-            jawaban: answerLetter,
-            nomor_soal: soalTerpilih + 1
+        let array = [...dataLocalStorage]
+        
+        // jika user mengganti jawaban yang sudah pernah dipilih 
+        if (dataSoal[soalTerpilih].jawaban !== "") {
+            dataSoal[soalTerpilih] = {
+                ...dataSoal[soalTerpilih],
+                jawaban: answerLetter
+            }
+            // hanya ganti data jawaban soal terpilih yang ada di localStorage
+            array[soalTerpilih].jawaban = answerLetter
+        } else {
+            dataSoal[soalTerpilih] = {
+                ...dataSoal[soalTerpilih],
+                jawaban: answerLetter
+            }
+            // jika user baru saja memilih jawaban , objek dataSoal soal terpilih push ke array
+            array.push(dataSoal[soalTerpilih])
         }
-        setChooseAnswer(answerLetter)
-        console.log(obj)
-
-        // clone array dataLocalStorage
-        let array = [...dataLocalStorage];
-        
-        array.push(obj)
         setLocalStorage(array)
-        
-        // dimasukkan ke localStorage
-        localStorage.setItem("dataJawaban" , JSON.stringify(array))
+
+        localStorage.setItem("jawaban" , JSON.stringify(array.sort(compare)))
     }
+
+    // const kirimJawaban = (e) => {
+    //     e.preventDefault();
+    //     fire.firestore().collection("jawaban").add({
+    //         tryout_id: "8rMpLO1vfy3IzzulsQcq",
+    //         user_id:
+    //     })
+    // }
 
     return (
         <div className="parent-area d-flex container" style={{ position: "absolute", top: "60px", right: "0", bottom: "0", left: "0" }}>
@@ -73,17 +102,18 @@ const InExam = () => {
 
                             <div className="pilgan">
                                 <ListGroup>
-                                    <ListGroupItem chooseAnswer={chooseAnswer === "A" ? true : false} abjad="A" jawaban={dataSoal[soalTerpilih].a} onClick={() => choosingAnswer("A")} />
-                                    <ListGroupItem chooseAnswer={chooseAnswer === "B" ? true : false} abjad="B" jawaban={dataSoal[soalTerpilih].b} onClick={() => choosingAnswer("B")} />
-                                    <ListGroupItem chooseAnswer={chooseAnswer === "C" ? true : false} abjad="C" jawaban={dataSoal[soalTerpilih].c} onClick={() => choosingAnswer("C")} />
-                                    <ListGroupItem chooseAnswer={chooseAnswer === "D" ? true : false} abjad="D" jawaban={dataSoal[soalTerpilih].d} onClick={() => choosingAnswer("D")} />
-                                    <ListGroupItem chooseAnswer={chooseAnswer === "E" ? true : false} abjad="E" jawaban={dataSoal[soalTerpilih].e} onClick={() => choosingAnswer("E")} />
+                                    <ListGroupItem chooseAnswer={dataSoal[soalTerpilih].jawaban === "A" ? true : false} abjad="A" jawaban={dataSoal[soalTerpilih].a} onClick={() => choosingAnswer("A")} />
+                                    <ListGroupItem chooseAnswer={dataSoal[soalTerpilih].jawaban === "B" ? true : false} abjad="B" jawaban={dataSoal[soalTerpilih].b} onClick={() => choosingAnswer("B")} />
+                                    <ListGroupItem chooseAnswer={dataSoal[soalTerpilih].jawaban === "C" ? true : false} abjad="C" jawaban={dataSoal[soalTerpilih].c} onClick={() => choosingAnswer("C")} />
+                                    <ListGroupItem chooseAnswer={dataSoal[soalTerpilih].jawaban === "D" ? true : false} abjad="D" jawaban={dataSoal[soalTerpilih].d} onClick={() => choosingAnswer("D")} />
+                                    <ListGroupItem chooseAnswer={dataSoal[soalTerpilih].jawaban === "E" ? true : false} abjad="E" jawaban={dataSoal[soalTerpilih].e} onClick={() => choosingAnswer("E")} />
                                 </ListGroup>
                             </div>
 
                             <div className="mt-3">
                                 <Button variant="outline-secondary" disabled={soalTerpilih === 0 ? true : false} onClick={() => setSoalTerpilih(soalTerpilih - 1)}>Sebelumnya</Button>
                                 <Button variant="outline-secondary" disabled={soalTerpilih === dataSoal.length - 1 ? true : false} className="mx-3" onClick={() => setSoalTerpilih(soalTerpilih + 1)}>Selanjutnya</Button>
+                                <Button variant="success" className="mx-3">Kirim Jawaban</Button>
                             </div>
 
                         </div>
@@ -98,9 +128,9 @@ const InExam = () => {
                                 <table class="table table-borderless">
                                     <tbody>
                                         <tr>
-                                            <td className="text-center" onClick={() => setSoalTerpilih(0)} style={{ cursor: "pointer" }}><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 0 ? "#FFB332" : "" }} >1</div></td>
-                                            <td className="text-center" onClick={() => setSoalTerpilih(1)} style={{ cursor: "pointer" }}><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 1 ? "#FFB332" : "" }} >2</div></td>
-                                            <td className="text-center" onClick={() => setSoalTerpilih(2)} style={{ cursor: "pointer" }}><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 2 ? "#FFB332" : "" }} >3</div></td>
+                                            <td className="text-center" onClick={() => setSoalTerpilih(0)} style={{ cursor: "pointer" }}><div className={`border ${Object.keys(dataLocalStorage).length !== 0 && typeof dataLocalStorage[0] !== 'undefined' ? dataLocalStorage[0].jawaban !== "" ? "border-primary" : "border-secondary" : ""} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 0 ? "#FFB332" : "" }} >1</div></td>
+                                            <td className="text-center" onClick={() => setSoalTerpilih(1)} style={{ cursor: "pointer" }}><div className={`border ${Object.keys(dataLocalStorage).length !== 0 && typeof dataLocalStorage[1] !== 'undefined' ? dataLocalStorage[1].jawaban !== "" ? "border-primary" : "border-secondary" : ""} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 1 ? "#FFB332" : "" }} >2</div></td>
+                                            <td className="text-center" onClick={() => setSoalTerpilih(2)} style={{ cursor: "pointer" }}><div className={`border ${Object.keys(dataLocalStorage).length !== 0 && typeof dataLocalStorage[2] !== 'undefined' ? dataLocalStorage[2].jawaban !== "" ? "border-primary" : "border-secondary" : ""} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 2 ? "#FFB332" : "" }} >3</div></td>
                                             <td className="text-center"><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px" }} >4</div></td>
                                             <td className="text-center"><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px" }} >5</div></td>
                                         </tr>
