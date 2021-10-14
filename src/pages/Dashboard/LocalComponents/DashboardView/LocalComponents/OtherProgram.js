@@ -14,9 +14,12 @@ const OtherProgram = () => {
     let {path , url} = useRouteMatch();
 
     const programsData = [
-        { id: 1, nama_tryout: "TO 1", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
-        { id: 2, nama_tryout: "TO 2", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
-        { id: 3, nama_webinar: "Webinar 2", tanggal: "Kamis, 24 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar},
+        // id sementara 
+        // 8rM = id tryout yang ada di firebase
+        // XT5 = id webinar yang ada di firebase
+        { id: "8rMpLO1vfy3IzzulsQcq" , nama_tryout: "TO 1", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: "8rMpLO1vfy3IzzulsQcq" , nama_tryout: "TO 2", tanggal: "Kamis, 30 Juli 2021 - Jumat, 1 Feb 2021", harga: 15000, poster_tryout: PosterTryout},
+        { id: "XT5RkGfIDndGTDndmpJ4" , nama_webinar: "Webinar 2", tanggal: "Kamis, 24 Juli 2021", waktu_mulai: "14:00", waktu_akhir: "16:00", harga: 15000, poster_webinar: posterWebinar},
     ]
 
     return (

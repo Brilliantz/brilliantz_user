@@ -19,8 +19,8 @@ const Login = ({size}) => {
                     setStatus(true);
                     // setelah get user yang aktif , cek photoURLnya di user aktif dan detail profil di firestore 
                     // kosong apa ngga kalo kosong arahkan ke /complete-profile , kalo ngga arahkan ke /dashboard
-                    fire.firestore().collection("users").doc(user.uid).get().
-                    then(userDetail => {
+                    fire.firestore().collection("users").doc(user.uid).get()
+                    .then(userDetail => {
                         if ((user.photoURL === null) || (!userDetail.exists)) { window.location.href = "/complete-profile" }
                         else { window.location.href = "/dashboard" }
                     })

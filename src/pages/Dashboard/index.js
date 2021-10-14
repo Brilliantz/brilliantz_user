@@ -9,14 +9,11 @@ import {
     Route, 
     Switch , 
     useParams, 
-    useHistory, 
     useRouteMatch
 } from "react-router-dom";
-// import fire from "../../config/firebase"
 
 const Dashboard = ({size}) => {
     let {path , url} = useRouteMatch();
-    const history = useHistory();
 
     // get data user aktif dari localStorage 
     // get data from localStorage
@@ -132,9 +129,6 @@ const Dashboard = ({size}) => {
 
 const Content = ({size , dataUser}) => {
     let {choose} = useParams();
-
-    console.log(choose);
-
     return (
         <div style={{paddingBottom: '50px' , boxSizing: 'border-box'}}>
             {

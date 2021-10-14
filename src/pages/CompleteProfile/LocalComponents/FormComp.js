@@ -38,7 +38,7 @@ const FormComp = ({ success, handleSuccess, dataUser , size}) => {
         if (dataPreview.photoURL !== null) { 
             setInputs({...inputs , foto_profil: dataPreview.photoURL}) 
         }
-    } , [dataProvinsi])
+    } , [])
 
 
     // uploadImage ini akan langsung mengupload gambar karena dibutuhkan URL gambarnya yang nantinya
@@ -171,7 +171,7 @@ const FormComp = ({ success, handleSuccess, dataUser , size}) => {
 
                 <div style={{ width: `${size.width < 500 ? "100%" : "55%"}` }}>
                     <Input text="Nama Lengkap" type="text" filledData={dataPreview.displayName} name="nama_lengkap" onChange={(e) => {setInputs({...inputs, [e.target.name]: e.target.value}); setDataPrev({...dataPreview , displayName: e.target.value})}} />
-                    <Select label="Jenis Kelamin" data={jenisKelamin} name="jenis_kelamin" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value == "L" ? "Laki-Laki" : "Perempuan"})} />
+                    <Select label="Jenis Kelamin" data={jenisKelamin} name="jenis_kelamin" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value === "L" ? "Laki-Laki" : "Perempuan"})} />
                     <Input text="Asal Sekolah" type="text" name="asal_sekolah" onChange={(e) => setInputs({...inputs, [e.target.name]: e.target.value})} />
                     {
                         loadingProvinsi ? (
