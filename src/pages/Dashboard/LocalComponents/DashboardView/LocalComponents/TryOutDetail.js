@@ -208,7 +208,7 @@ const TryOutDetailCard = () => {
                         </div>
                     </div>
 
-                    <Button className="btn btn-block border-0 p-3 mt-4 mb-3" style={{backgroundColor: '#4A47D6'}}>Daftar TryOut</Button>    
+                    <Button className="btn btn-block border-0 p-3 mt-4 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = "/payment/key-tryout"}>Daftar TryOut</Button>    
                 </Card.Body>
             </Card>
         </>

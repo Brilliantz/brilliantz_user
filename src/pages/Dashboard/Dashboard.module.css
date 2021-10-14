@@ -55,7 +55,8 @@ span { margin-left: 16px; }
 
 .contents { background-color: transparent; height: 100%; }
 
-.breadcrumb li a{ text-decoration: none; }
+.breadcrumb ol { background-color: transparent; }
+.breadcrumb li a{ text-decoration: none; color: #4A47D6 }
 
 .link_collapse { background-color: #fff; }
 .link_collapse ul { list-style: none; margin: 0; padding: 0;}

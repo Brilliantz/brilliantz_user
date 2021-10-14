@@ -4,9 +4,7 @@ import ProgramBought from './ProgramBought';
 import OtherProgram from './OtherProgram';
 import style from "../../../Dashboard.module.css";
 
-
 const ProgramList = () => {
-
     return (
         <div>
             {/* breadcrumb */}

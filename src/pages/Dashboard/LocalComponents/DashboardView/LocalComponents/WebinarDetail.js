@@ -102,7 +102,7 @@ const WebinarDetailCard = () => {
                         Zoom Media Conference
                     </p>
 
-                    <Button className="btn btn-block border-0 p-3 mb-3" style={{backgroundColor: '#4A47D6'}}>Daftar Webinar</Button>    
+                    <Button className="btn btn-block border-0 p-3 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = "/payment/key-tryout"}>Daftar Webinar</Button>    
                 </Card.Body>
             </Card>
         </>
