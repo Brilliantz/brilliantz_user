@@ -3,29 +3,52 @@ import { Button, ListGroup, Image, Modal } from "react-bootstrap";
 import fire from "../../config/firebase";
 
 const InExam = () => {
-    // logic di komponent ini : 
-    // - semua jawaban di simpan di localStorage dulu , terus di akhir soal ada tombol kirim jawaban , nah jawaban dari localStorage itu di looping 1 1 , di post ke firebase
-    //   kalo di simpan dulu di localStorage , kalau ada case user mengganti jawabannya , logic & responnya bisa lebih cepat
-
-    // - setiap user habis memilih jawaban , akan langsung dikirim ke firebase jawabannya , tapi itu agak susah kalo usernya mau ganti jawaban
-
-    // dataUser ini datanya diambil dari localStorage buat dipakai uid nya, untuk data field collection jawaban , 
-    // karena disana cuman ada tryout_id aja
     const [dataUser , setDataUser] = useState({})
 
     const [dataSoal, setDataSoal] = useState([]);
     const [soalTerpilih, setSoalTerpilih] = useState(0);
     const [loading, setLoading] = useState(true);
 
+    // ini ga dipake , tapi kalo dihapus / dikomen , program e ga jalan
     const [dataLocalStorage , setLocalStorage] = useState([])
 
     const [showModal , setShowModal] = useState(false)
+    
+    // const bidangTryout = {
+    //     saintek: ["penalaran_umum" , "kuantitatif" , "pengetahuan_dan_pemahaman_umum" , "pengetahuan_bacaan_menulis" , "matematika" , "fisika" , "kimia" , "biologi"] , 
+    //     soshum: ["penalaran_umum" , "kuantitatif" , "pengetahuan_dan_pemahaman_umum" , "pengetahuan_bacaan_menulis" , "geografi" , "sejarah" , "sosiologi" , "ekonomi"]
+    // }
+
+    const bidangTryout = {
+        saintek: [
+            {nama: "penalaran_umum" , waktu: 35},
+            {nama: "kuantitatif" , waktu: 35},
+            {nama: "pengetahuan_dan_pemahaman_umum" , waktu: 25},
+            {nama: "pengetahuan_bacaan_menulis" , waktu: 25},
+            {nama: "matematika" , waktu: 22.5},
+            {nama: "fisika" , waktu: 22.5},
+            {nama: "kimia" , waktu: 22.5},
+            {nama: "biologi" , waktu: 22.5},
+        ] , 
+        soshum: [
+            {nama: "penalaran_umum" , waktu: 35},
+            {nama: "kuantitatif" , waktu: 35},
+            {nama: "pengetahuan_dan_pemahaman_umum" , waktu: 25},
+            {nama: "pengetahuan_bacaan_menulis" , waktu: 25},
+            {nama: "geografi" , waktu: 22.5},
+            {nama: "sejarah" , waktu: 22.5},
+            {nama: "sosiologi" , waktu: 22.5},
+            {nama: "ekonomi" , waktu: 22.5},
+        ]
+    }
+
+    const [bidangTerpilih , setBidangTerpilih] = useState(0)
     
     useEffect(() => {
         if (localStorage.key("dataUser")) {
             setDataUser(JSON.parse(localStorage.getItem("dataUser")))
         }
-        fire.firestore().collection("tryout").doc("8rMpLO1vfy3IzzulsQcq").collection("penalaran_umum").get()
+        fire.firestore().collection("tryout").doc("8rMpLO1vfy3IzzulsQcq").collection(bidangTryout.saintek[bidangTerpilih].nama).get()
             .then(response => {
                 let temp = []
                 let obj;
@@ -39,11 +62,36 @@ const InExam = () => {
                     temp.push(obj)
                 })
                 temp.sort(compare)
+                console.log(temp)
                 setDataSoal(temp)
             })
             .catch(err => console.error(err))
             setLoading(false)
-    }, [])
+
+        setNamaBidang(bidangTryout.saintek[bidangTerpilih].nama)
+    }, [loading])
+
+    const setNamaBidang = (value) => {
+        let arr = value.split("")
+        let temp = ""
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === "_") {
+                arr[i] = " "
+            }
+            temp += arr[i]
+        }
+        
+        // rencananya mau digunain di navbar , nama bidangnya
+        // kalau gabisa di taruh di localStorage , set ke path url aja
+        localStorage.setItem("nama_bidang" , kapital(temp))
+    }
+
+    // fungsi buat ngatur judul bidang u/ di pake di navbarnya
+    const kapital = (str) => {
+        return str.replace (/\w\S*/g, function(txt) {  
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); 
+        })
+    }
 
     // fungsi untuk sort array 
     const compare = (a, b) => {
@@ -82,6 +130,33 @@ const InExam = () => {
         localStorage.setItem("jawaban" , JSON.stringify(array.sort(compare)))
     }
 
+    const kirimJawaban = () => {
+        let jawaban
+
+        if (localStorage.getItem("jawaban") !== null) {
+            jawaban = JSON.parse(localStorage.getItem("jawaban"))
+        } else {
+            alert("isi setidaknya 1 soal saja")
+            return
+        }
+
+        for (let jwb of jawaban) {
+            if (jwb.isAnswered) {
+                fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
+                    beban: jwb.beban ,
+                    jawaban: jwb.jawaban, 
+                    nomor_soal: jwb.nomor_soal,
+                })
+                .then(res => console.log(res))
+                .catch(err => console.error(err))
+            }
+        }
+        localStorage.removeItem("jawaban");
+        setBidangTerpilih(bidangTerpilih + 1)
+        setSoalTerpilih(0)
+        setLoading(true)
+    }
+
     return (
         <div className="parent-area d-flex container" style={{ position: "absolute", top: "60px", right: "0", bottom: "0", left: "0" }}>
             {
@@ -102,7 +177,6 @@ const InExam = () => {
                                         ) : (<span></span>)
                                 }
 
-
                                 <p className="py-3 w-75">{dataSoal[soalTerpilih].text_soal}</p>
 
                                 <div className="pilgan">
@@ -118,31 +192,41 @@ const InExam = () => {
                                 <div className="my-3 pb-4">
                                     <Button variant="outline-secondary" disabled={soalTerpilih === 0 ? true : false} onClick={() => setSoalTerpilih(soalTerpilih - 1)}>Sebelumnya</Button>
                                     <Button variant="outline-secondary" disabled={soalTerpilih === dataSoal.length - 1 ? true : false} className="mx-3" onClick={() => setSoalTerpilih(soalTerpilih + 1)}>Selanjutnya</Button>
-                                    <Button variant="success" className={`mx-3 ${soalTerpilih === dataSoal.length - 1 ? "" : "d-none"}`}>Selesai dan Kirim</Button>
+                                    <Button variant="success" className={`mx-3 ${soalTerpilih === dataSoal.length - 1 ? "" : "d-none"}`} onClick={() => kirimJawaban()}>Selesai dan Kirim</Button>
                                 </div>
 
                             </div>
 
-                            <div className="nomor-soal w-25 py-4 px-4 border-left">
-                                <ListGroup.Item className="d-flex justify-content-between border">
-                                    <span>Sisa Waktu</span>
+                            {/* bagian nomor soal , kode nya masih belum clean */}
+                            <div className="nomor-soal py-4 px-4" style={{width: "310px" , height: "100vh"}}>
+                                <ListGroup.Item className="d-flex justify-content-between border px-2">
+                                    <span className="m-0">Sisa Waktu</span>
                                     <span>30:00</span>
                                 </ListGroup.Item>
 
                                 <div className="nomor mt-2">
-                                    <table class="table table-borderless">
-                                        <tbody>
-                                            <tr>
-                                                <td className="text-center" onClick={() => setSoalTerpilih(0)} style={{cursor: "pointer" }}><div className={`border ${dataSoal[0].isAnswered === true ? "border-primary" : "border-secondary"} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 0 ? "#FFB332" : ""}} >1</div></td>
-                                                <td className="text-center" onClick={() => setSoalTerpilih(1)} style={{cursor: "pointer" }}><div className={`border ${dataSoal[1].isAnswered === true ? "border-primary" : "border-secondary"} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 1 ? "#FFB332" : ""}} >2</div></td>
-                                                <td className="text-center" onClick={() => setSoalTerpilih(2)} style={{cursor: "pointer" }}><div className={`border ${dataSoal[2].isAnswered === true ? "border-primary" : "border-secondary"} rounded-circle d-flex align-items-center justify-content-center`} style={{ width: "25px", height: "25px", padding: "15px", backgroundColor: soalTerpilih === 2 ? "#FFB332" : ""}} >3</div></td>
-                                                
-                                                <td className="text-center"><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px" }} >4</div></td>
-                                                <td className="text-center"><div className="border border-secondary rounded-circle d-flex align-items-center justify-content-center" style={{ width: "25px", height: "25px", padding: "15px" }} >5</div></td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
+                                    <ul style={{
+                                        padding: "0",
+                                        margin: "0",
+                                        listStyle: "none",
+                                        display: "flex",
+                                        flexWrap: "wrap",
+                                    }}>
+                                        {
+                                            dataSoal.map((data,index) => {
+                                                return (
+                                                    <li className="text-center" onClick={() => setSoalTerpilih(index)} style={{width: "35px" , height: "35px" , margin: "5px" , cursor: "pointer"}}>
+                                                        <div 
+                                                            className={`border ${dataSoal[index].isAnswered === true ? "border-primary" : "border-secondary"} rounded-circle d-flex align-items-center justify-content-center fw-bold`} 
+                                                            style={{ width: "100%", height: "100%", padding: "5px", backgroundColor: soalTerpilih === index ? "#FFB332" : "" , color: dataSoal[index].isAnswered ? "blue" : ""}}    
+                                                        >
+                                                            {data.nomor_soal}
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
                                 </div>
                             </div>
                         </>
@@ -192,10 +276,6 @@ const MyVerticallyCenteredModal = (props) => {
             </Modal.Footer>
         </Modal>
     );
-}
-
-const NomorSoal = () => {
-
 }
 
 export default InExam
