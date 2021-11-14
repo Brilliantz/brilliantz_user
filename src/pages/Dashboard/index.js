@@ -133,7 +133,7 @@ const Content = ({size , dataUser}) => {
         <div style={{paddingBottom: '50px' , boxSizing: 'border-box'}}>
             {
                 choose === "nilai-tryout" ? (
-                    <NilaiTryout size={size} />
+                    <NilaiTryout size={size} dataUser={dataUser} />
                 ) : choose === "ranking" ? (
                     <Ranking />
                 ) : choose === "profil" ? (
