@@ -13,6 +13,8 @@ const InExam = () => {
     const [dataLocalStorage , setLocalStorage] = useState([])
 
     const [showModal , setShowModal] = useState(false)
+
+    const [waktu , setWaktu] = useState("")
     
     // const bidangTryout = {
     //     saintek: ["penalaran_umum" , "kuantitatif" , "pengetahuan_dan_pemahaman_umum" , "pengetahuan_bacaan_menulis" , "matematika" , "fisika" , "kimia" , "biologi"] , 
@@ -70,6 +72,21 @@ const InExam = () => {
 
         setNamaBidang(bidangTryout.saintek[bidangTerpilih].nama)
     }, [loading])
+
+    // untuk timer countdown
+    useEffect(() => {
+        let startingMinutes = 1
+        let time = startingMinutes * 60
+        const updateCountDown = () => {
+            const minutes = Math.floor(time / 60)
+            let seconds = time % 60
+            seconds = seconds < 1 ? '0' + seconds : seconds
+            setWaktu(`${minutes}: ${seconds}`)
+            time--
+        }
+
+        setInterval(updateCountDown , 200);
+    } , [])
 
     const setNamaBidang = (value) => {
         let arr = value.split("")
@@ -131,6 +148,9 @@ const InExam = () => {
     }
 
     const kirimJawaban = () => {
+        alert("Waktu telah habis , silahkan mengerjakan bidang selanjutnya")
+        setWaktu("")
+
         let jawaban
 
         if (localStorage.getItem("jawaban") !== null) {
@@ -201,7 +221,8 @@ const InExam = () => {
                             <div className="nomor-soal py-4 px-4" style={{width: "310px" , height: "100vh"}}>
                                 <ListGroup.Item className="d-flex justify-content-between border px-2">
                                     <span className="m-0">Sisa Waktu</span>
-                                    <span>30:00</span>
+                                    <span>{waktu}</span>
+                                    {waktu === "0: 00" ? kirimJawaban() : ""}
                                 </ListGroup.Item>
 
                                 <div className="nomor mt-2">
