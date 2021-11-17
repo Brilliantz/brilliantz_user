@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Form, DropdownButton, ButtonGroup, Dropdown } from "react-bootstrap";
+import { Button, Form, Dropdown } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import styles from "./FormComp.module.css";
 import BNILogo from "../../../assets/BNILogo.png";
 import MandiriLogo from "../../../assets/MandiriLogo.png"
 import BRILogo from "../../../assets/BRILogo.png"
 import OVOLogo from "../../../assets/OVOLogo.png"
+import BCALogo from "../../../assets/BCALogo.png"
+import GoPayLogo from "../../../assets/GoPayLogo.png"
+import DanaLogo from "../../../assets/DanaLogo.png"
 import fire from "../../../config/firebase"
+import swal from "sweetalert2"
 
 const FormComp = ({ success, handleSuccess, size }) => {
     let dataUser
@@ -16,7 +19,7 @@ const FormComp = ({ success, handleSuccess, size }) => {
     const [dataFoto, setDataFoto] = useState("")
     const [dataProgram, setDataProgram] = useState(undefined);
     const [loading, setLoading] = useState(true);
-    const [selectedPayment, setSelectPayment] = useState("");
+    const [selectedPayment, setSelectPayment] = useState({data: "" , label: ""});
     const history = useHistory();
 
     let pathname = window.location.pathname.split("/")
@@ -37,30 +40,38 @@ const FormComp = ({ success, handleSuccess, size }) => {
         e.preventDefault()
         let uploadTask
 
-        // kirim data gambar ke firebase storage
-        uploadTask = fire.storage().ref().child(`transaksi/${dataUser.displayName === null ? "anonim" : dataUser.displayName}-${dataFoto.target.files[0].name}`).put(dataFoto.target.files[0])
-        uploadTask.then(snapshot => {
-            snapshot.ref.getDownloadURL().then(response => {
-
-                // kirim data ke firebase collection transaksi
-                fire.firestore().collection("transaksi").add({
-                    bayar_via: selectedPayment,
-                    bukti_pembayaran: response,
-                    created_at: new Date(),
-                    harga: dataProgram.harga,
-                    nama_lengkap: dataUser.displayName,
-                    program_id: pathname[3],
-                    status: "", // nanti status bakal diganti dari admin
-                    tipe_program: pathname[2],
-                    updated_at: "", // sejalan dengan tergantinya property status
-                    user_id: dataUser.uid,
-                })
-                    .then(() => {
-                        success = true;
-                        handleSuccess(success)
+        if (dataFoto !== "") {
+            // kirim data gambar ke firebase storage
+            uploadTask = fire.storage().ref().child(`transaksi/${dataUser.displayName === null ? "anonim" : dataUser.displayName}-${dataFoto.target.files[0].name}`).put(dataFoto.target.files[0])
+            uploadTask.then(snapshot => {
+                snapshot.ref.getDownloadURL().then(response => {
+    
+                    // kirim data ke firebase collection transaksi
+                    fire.firestore().collection("transaksi").add({
+                        bayar_via: selectedPayment.data,
+                        bukti_pembayaran: response,
+                        created_at: new Date(),
+                        harga: dataProgram.harga,
+                        nama_lengkap: dataUser.displayName,
+                        program_id: pathname[3],
+                        status: "Pending", // nanti status bakal diganti dari admin
+                        tipe_program: pathname[2],
+                        updated_at: new Date(),
+                        user_id: dataUser.uid,
                     })
+                        .then(() => {
+                            success = true;
+                            handleSuccess(success)
+                        })
+                })
             })
-        })
+        } else {
+            swal.fire({
+                icon: 'error',
+                title: 'Anda belum memasukkan bukti transfer',
+            })
+        }
+
     }
 
     const DropDownItem = (props) => {
@@ -74,7 +85,7 @@ const FormComp = ({ success, handleSuccess, size }) => {
     }
 
     return (
-        <div className={`${size.width < 550 ? "" : "d-flex"}`} style={{ width: `${size.width < 500 ? "100%" : "500px"}`, height: `${size.width < 500 ? "auto" : "auto"}` }}>
+        <div className={`${size.width < 550 ? "" : "d-flex"}`} style={{ width: `${size.width < 500 ? "100%" : "600px"}`, height: `${size.width < 500 ? "auto" : "auto"}` }}>
             {
                 loading ? (<span>Loading ...</span>) : (
                     <>
@@ -97,7 +108,7 @@ const FormComp = ({ success, handleSuccess, size }) => {
                                         <Form.Group className="mb-3" controlId="formBasicImage">
                                             <Form.Control type="file" placeholder="Klik untuk memilih gambar" onChange={(e) => setDataFoto(e)} />
                                         </Form.Group>
-                                        <Button type="submit" disabled={selectedPayment === "" ? true : false} className="mt-3 w-100" style={{ height: '48px', backgroundColor: '#4A47D6' }} onClick={sendData}>
+                                        <Button type="submit" disabled={selectedPayment.data === "" ? true : false} className="mt-3 w-100" style={{ height: '48px', backgroundColor: '#4A47D6' }} onClick={sendData}>
                                             Unggah Foto
                                         </Button>
                                     </div>
@@ -106,70 +117,39 @@ const FormComp = ({ success, handleSuccess, size }) => {
 
                                 {/* pilih metode pembayaran */}
                                 <p className="my-0 text-secondary">Metode Pembayaran</p>
-                                <DropdownButton
-                                    as={ButtonGroup}
-                                    title={`${selectedPayment === "" ? "Pilih Metode Pembayaran" : selectedPayment}`}
-                                    id="dropdown-menu-align-responsive-1"
-                                    variant="outline-secondary"
-                                >
-                                    <Dropdown.Item onClick={() => setSelectPayment("BNI")}><DropDownItem icon={BNILogo} label="BNI" /></Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setSelectPayment("Mandiri")}><DropDownItem icon={MandiriLogo} label="Mandiri" /></Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setSelectPayment("BRI")}><DropDownItem icon={BRILogo} label="BRI" /></Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setSelectPayment("OVO")}><DropDownItem icon={OVOLogo} label="OVO" /></Dropdown.Item>
-                                </DropdownButton>
+                                <Dropdown>
+                                    <Dropdown.Toggle 
+                                        variant="outline-secondary" 
+                                        id="dropdown-menu-align-responsive-1"
+                                        className="w-100"
+                                    >
+                                        { selectedPayment.data === "" ? "Pilih Metode Pembayaran" : selectedPayment.label }
+                                    </Dropdown.Toggle>
 
-                                <div className="payment-step mt-4">
-                                    <h1 style={{ fontSize: '24px' }}>Tata Cara Pembayaran</h1>
-                                    {
-                                        selectedPayment === "OVO" ? (
-                                            <ul className="p-0">
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">1</div>
-                                                    <div style={{ marginLeft: '10px' }}>Transfer</div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">2</div>
-                                                    <div style={{ marginLeft: '10px' }}>Ke Sesama OVO</div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">3</div>
-                                                    <div style={{ marginLeft: '10px' }}>Masukkan nomor 085746156526 <b>a.n Firdi</b></div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">4</div>
-                                                    <div style={{ marginLeft: '10px' }}>Masukkan Nominal Transfer</div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">5</div>
-                                                    <div style={{ marginLeft: '10px' }}>Lanjutkan</div>
-                                                </li>
-                                            </ul>
-                                        ) : (
-                                            <ul className="p-0">
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">1</div>
-                                                    <div style={{ marginLeft: '10px' }}>
-                                                        Masukkan nomor rekening tujuan berikut,
-                                                        <br /> 0842618134 <b>a.n Zulfikar Juan Pramasta</b>.</div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">2</div>
-                                                    <div style={{ marginLeft: '10px' }}>Masukkan jumlah yang harus dibayar.</div>
-                                                </li>
-                                                <li style={{ listStyle: 'none' }}><div className={`${styles.divider} ${styles.grey}`}></div></li>
-                                                <li className="d-flex align-items-center" style={{ listStyle: 'none', width: '450px' }}>
-                                                    <div style={{ width: '22px', height: '22px', backgroundColor: '#4A47D6', borderRadius: '50%', margin: '10px 0' }} className="d-flex justify-content-center align-items-center text-white">3</div>
-                                                    <div style={{ marginLeft: '10px' }}>Foto dan unggah bukti transfer di website.</div>
-                                                </li>
-                                            </ul>
-                                        )
-                                    }
-                                </div>
+                                    <Dropdown.Menu className="w-100">
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "BNI" , label: "BNI - 842618134 a/n Zulfikar Juan Pramasta"})} >
+                                            <DropDownItem icon={BNILogo} /> BNI - 842618134 a/n Zulfikar Juan Pramasta
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "BRI" , label: "BRI - 33401020559539 a/n Zaidan Alvin Alhanif"})} >
+                                            <DropDownItem icon={BRILogo} /> BRI - 33401020559539 a/n Zaidan Alvin Alhanif
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "Mandiri" , label: "Mandiri - 1560000919698 a/n Agus Umaryanto"})} >
+                                            <DropDownItem icon={MandiriLogo} /> Mandiri - 1560000919698 a/n Agus Umaryanto
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "BCA" , label: "BCA - 770871123 a/n Royyan Nurbiksa Jaka Pratama"})} >
+                                            <DropDownItem icon={BCALogo} /> BCA - 770871123 a/n Royyan Nurbiksa Jaka Pratama
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "OVO" , label: "OVO - 085746156526 a/n Firdiyanti Al Ma'idha"})} >
+                                            <DropDownItem icon={OVOLogo} /> OVO - 085746156526 a/n Firdiyanti Al Ma'idha
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "GoPay" , label: "Gopay - 081542203141 a/n Royyan Nurbiksa Jaka Pratama"})} >
+                                            <DropDownItem icon={GoPayLogo} /> Gopay - 081542203141 a/n Royyan Nurbiksa Jaka Pratama
+                                        </Dropdown.Item>
+                                        <Dropdown.Item className="d-flex align-items-center" onClick={() => setSelectPayment({data: "Dana" , label: "Dana - 085803753325 a/n Zaidan Alvin Alhanif"})} >
+                                            <DropDownItem icon={DanaLogo} /> Dana - 085803753325 a/n Zaidan Alvin Alhanif
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </Form>
                         </div>
                     </>
