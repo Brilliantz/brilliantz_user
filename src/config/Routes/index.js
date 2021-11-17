@@ -1,10 +1,16 @@
-import React from 'react'
+import React , {createContext, useState} from 'react'
 import {BrowserRouter as Router , Route , Switch , Redirect} from "react-router-dom";
 import {LandingPage , Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard, InExam} from "../../pages";
 import {Navbars} from "../../components";
 import styled from "styled-components"
 
+export const titleContext = createContext()    
+
 const Routes = ({size}) => {
+    const [namaBidang , setNamaBidang] = useState("")
+    const dispatch = (namaBidangBaru) => {
+        return setNamaBidang(namaBidangBaru)
+    }
     return (
         <Router>
             <Switch>
@@ -40,8 +46,10 @@ const Routes = ({size}) => {
                 </Route> */}
 
                 <Route path="/in-exam">
-                    <Navbars size={size} />
-                    <InExam />
+                    <titleContext.Provider value={{ state: namaBidang , dispatch: dispatch }}>
+                        <Navbars size={size} />
+                        <InExam />
+                    </titleContext.Provider>
                 </Route>
             </Switch>
         </Router>

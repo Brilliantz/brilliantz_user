@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Button, ListGroup, Image, Modal } from "react-bootstrap";
 import fire from "../../config/firebase";
+import { titleContext } from '../../config/Routes';
 
 const InExam = () => {
     const [dataUser , setDataUser] = useState({})
@@ -45,6 +46,7 @@ const InExam = () => {
     }
 
     const [bidangTerpilih , setBidangTerpilih] = useState(0)
+    const namaBidang = useContext(titleContext) // namaBidang.state , namaBidang.dispatch
     
     useEffect(() => {
         if (localStorage.key("dataUser")) {
@@ -74,19 +76,19 @@ const InExam = () => {
     }, [loading])
 
     // untuk timer countdown
-    useEffect(() => {
-        let startingMinutes = 1
-        let time = startingMinutes * 60
-        const updateCountDown = () => {
-            const minutes = Math.floor(time / 60)
-            let seconds = time % 60
-            seconds = seconds < 1 ? '0' + seconds : seconds
-            setWaktu(`${minutes}: ${seconds}`)
-            time--
-        }
+    // useEffect(() => {
+    //     let startingMinutes = 1
+    //     let time = startingMinutes * 60
+    //     const updateCountDown = () => {
+    //         const minutes = Math.floor(time / 60)
+    //         let seconds = time % 60
+    //         seconds = seconds < 1 ? '0' + seconds : seconds
+    //         setWaktu(`${minutes}: ${seconds}`)
+    //         time--
+    //     }
 
-        setInterval(updateCountDown , 200);
-    } , [])
+    //     setInterval(updateCountDown , 200);
+    // } , [])
 
     const setNamaBidang = (value) => {
         let arr = value.split("")
@@ -98,9 +100,8 @@ const InExam = () => {
             temp += arr[i]
         }
         
-        // rencananya mau digunain di navbar , nama bidangnya
-        // kalau gabisa di taruh di localStorage , set ke path url aja
-        localStorage.setItem("nama_bidang" , kapital(temp))
+        // pake context api buat update nama bidang di navbar
+        namaBidang.dispatch(kapital(temp))
     }
 
     // fungsi buat ngatur judul bidang u/ di pake di navbarnya
@@ -148,8 +149,8 @@ const InExam = () => {
     }
 
     const kirimJawaban = () => {
-        alert("Waktu telah habis , silahkan mengerjakan bidang selanjutnya")
-        setWaktu("")
+        // alert("Waktu telah habis , silahkan mengerjakan bidang selanjutnya")
+        // setWaktu("")
 
         let jawaban
 

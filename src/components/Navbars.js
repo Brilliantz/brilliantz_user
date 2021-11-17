@@ -1,16 +1,18 @@
-import React , {useState , useEffect} from 'react'
+import React , {useState , useEffect , useContext} from 'react'
 import { Navbar, Nav, NavDropdown, Container, NavbarBrand } from 'react-bootstrap'
 import Logo from "./Logo";
 import styled from "styled-components";
 import { useHistory } from 'react-router';
+import { titleContext } from '../config/Routes';
 
 const Navbars = ({ size }) => {
     let pathname = window.location.pathname
     const history = useHistory()
-    const [namaBidang , setNamaBidang] = useState("")
-    useEffect(() => {
-        setNamaBidang(localStorage.getItem("nama_bidang"))
-    } , [localStorage.getItem("nama_bidang")])
+    // const [namaBidang , setNamaBidang] = useState("")
+    // useEffect(() => {
+    //     setNamaBidang(localStorage.getItem("nama_bidang"))
+    // } , [])
+    const examTitle = useContext(titleContext)
     return (
         <>
             {
@@ -65,7 +67,7 @@ const Navbars = ({ size }) => {
                                     pathname === "/in-exam" ? (
                                         <Container className="d-flex justify-content-between">
                                             <Navbar.Brand href="/"><Logo /></Navbar.Brand>
-                                            <span style={{fontSize: "24px" , fontWeight: "bold"}}>TryOut Saintek 1 / {namaBidang}</span>
+                                            <span style={{fontSize: "24px" , fontWeight: "bold"}}>TryOut Saintek 1 / {examTitle.state}</span>
                                             <span></span>
                                         </Container>
                                     ) : (<div></div>)
