@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Button, ListGroup, Image, Modal } from "react-bootstrap";
 import fire from "../../config/firebase";
 import { titleContext } from '../../config/Routes';
+import Countdown from 'react-countdown';
+import Swal from 'sweetalert2';
 
 const InExam = () => {
     const [dataUser , setDataUser] = useState({})
@@ -10,18 +12,8 @@ const InExam = () => {
     const [soalTerpilih, setSoalTerpilih] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    // ini ga dipake , tapi kalo dihapus / dikomen , program e ga jalan
-    const [dataLocalStorage , setLocalStorage] = useState([])
-
     const [showModal , setShowModal] = useState(false)
-
-    const [waktu , setWaktu] = useState("")
-    
-    // const bidangTryout = {
-    //     saintek: ["penalaran_umum" , "kuantitatif" , "pengetahuan_dan_pemahaman_umum" , "pengetahuan_bacaan_menulis" , "matematika" , "fisika" , "kimia" , "biologi"] , 
-    //     soshum: ["penalaran_umum" , "kuantitatif" , "pengetahuan_dan_pemahaman_umum" , "pengetahuan_bacaan_menulis" , "geografi" , "sejarah" , "sosiologi" , "ekonomi"]
-    // }
-
+    const [dateNow , setDateNow] = useState(undefined)
     const bidangTryout = {
         saintek: [
             {nama: "penalaran_umum" , waktu: 35},
@@ -44,7 +36,6 @@ const InExam = () => {
             {nama: "ekonomi" , waktu: 22.5},
         ]
     }
-
     const [bidangTerpilih , setBidangTerpilih] = useState(0)
     const namaBidang = useContext(titleContext) // namaBidang.state , namaBidang.dispatch
     
@@ -66,29 +57,14 @@ const InExam = () => {
                     temp.push(obj)
                 })
                 temp.sort(compare)
-                console.log(temp)
                 setDataSoal(temp)
             })
             .catch(err => console.error(err))
             setLoading(false)
 
         setNamaBidang(bidangTryout.saintek[bidangTerpilih].nama)
+        setDateNow(Date.now())
     }, [loading])
-
-    // untuk timer countdown
-    // useEffect(() => {
-    //     let startingMinutes = 1
-    //     let time = startingMinutes * 60
-    //     const updateCountDown = () => {
-    //         const minutes = Math.floor(time / 60)
-    //         let seconds = time % 60
-    //         seconds = seconds < 1 ? '0' + seconds : seconds
-    //         setWaktu(`${minutes}: ${seconds}`)
-    //         time--
-    //     }
-
-    //     setInterval(updateCountDown , 200);
-    // } , [])
 
     const setNamaBidang = (value) => {
         let arr = value.split("")
@@ -126,13 +102,11 @@ const InExam = () => {
     const choosingAnswer = (answerLetter) => {
         let array = [...dataSoal]
         
-        // jika user mengganti jawaban yang sudah pernah dipilih 
         if ( dataSoal[soalTerpilih].jawaban !== "" ) {
             dataSoal[soalTerpilih] = {
                 ...dataSoal[soalTerpilih],
                 jawaban: answerLetter
             }
-            // hanya ganti data jawaban soal terpilih yang ada di localStorage
             array[soalTerpilih].jawaban = answerLetter
         } else {
             dataSoal[soalTerpilih] = {
@@ -140,42 +114,50 @@ const InExam = () => {
                 isAnswered: true,
                 jawaban: answerLetter
             }
-            // jika user baru saja memilih jawaban , objek dataSoal soal terpilih push ke array
-            array.push(dataSoal[soalTerpilih])
+            array[soalTerpilih] = dataSoal[soalTerpilih]
         }
-        setLocalStorage(array)
-
         localStorage.setItem("jawaban" , JSON.stringify(array.sort(compare)))
     }
 
     const kirimJawaban = () => {
-        // alert("Waktu telah habis , silahkan mengerjakan bidang selanjutnya")
-        // setWaktu("")
+        Swal.fire({
+            icon: 'warning',
+            title: 'Waktu mengerjakan subbidang ini telah selesai',
+            text: 'Silahkan mengerjakan subbidang selanjutnya',
+        }).then(respon => {
+            if (respon.isConfirmed){
+                let jawaban
+                let uploadTask
+                if (localStorage.getItem("jawaban") !== null) {
+                    jawaban = JSON.parse(localStorage.getItem("jawaban"))
+                    let number;
+                    for (let jwb of jawaban) {
+                        number = jwb.nomor_soal
+                        if (jwb.isAnswered) {
+                            fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
+                                beban: jwb.beban ,
+                                jawaban: jwb.jawaban, 
+                                nomor_soal: jwb.nomor_soal,
+                            })
+                            .then(res => console.log(res))
+                            .catch(err => console.error(err))
+                        } else if (number) {
+                        } else {
 
-        let jawaban
-
-        if (localStorage.getItem("jawaban") !== null) {
-            jawaban = JSON.parse(localStorage.getItem("jawaban"))
-        } else {
-            alert("isi setidaknya 1 soal saja")
-            return
-        }
-
-        for (let jwb of jawaban) {
-            if (jwb.isAnswered) {
-                fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
-                    beban: jwb.beban ,
-                    jawaban: jwb.jawaban, 
-                    nomor_soal: jwb.nomor_soal,
-                })
-                .then(res => console.log(res))
-                .catch(err => console.error(err))
+                        }
+                    }
+                } else {
+                    jawaban = "tidak ada soal yang dijawab"
+                    fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
+                        message: jawaban
+                    }).then().catch()
+                }
+                localStorage.removeItem("jawaban");
+                setBidangTerpilih(bidangTerpilih + 1)
+                setSoalTerpilih(0)
+                setLoading(true)
             }
-        }
-        localStorage.removeItem("jawaban");
-        setBidangTerpilih(bidangTerpilih + 1)
-        setSoalTerpilih(0)
-        setLoading(true)
+        })
     }
 
     return (
@@ -213,7 +195,6 @@ const InExam = () => {
                                 <div className="my-3 pb-4">
                                     <Button variant="outline-secondary" disabled={soalTerpilih === 0 ? true : false} onClick={() => setSoalTerpilih(soalTerpilih - 1)}>Sebelumnya</Button>
                                     <Button variant="outline-secondary" disabled={soalTerpilih === dataSoal.length - 1 ? true : false} className="mx-3" onClick={() => setSoalTerpilih(soalTerpilih + 1)}>Selanjutnya</Button>
-                                    <Button variant="success" className={`mx-3 ${soalTerpilih === dataSoal.length - 1 ? "" : "d-none"}`} onClick={() => kirimJawaban()}>Selesai dan Kirim</Button>
                                 </div>
 
                             </div>
@@ -222,8 +203,8 @@ const InExam = () => {
                             <div className="nomor-soal py-4 px-4" style={{width: "310px" , height: "100vh"}}>
                                 <ListGroup.Item className="d-flex justify-content-between border px-2">
                                     <span className="m-0">Sisa Waktu</span>
-                                    <span>{waktu}</span>
-                                    {waktu === "0: 00" ? kirimJawaban() : ""}
+                                    {/* <Countdown date={dateNow + bidangTryout.saintek[bidangTerpilih].waktu * 60000} onComplete={() => kirimJawaban()} /> */}
+                                    {/* <Countdown date={dateNow + 5000} onComplete={() => kirimJawaban()} /> */}
                                 </ListGroup.Item>
 
                                 <div className="nomor mt-2">
@@ -264,7 +245,7 @@ const ListGroupItem = ({ chooseAnswer, abjad, jawaban, ...rest }) => {
     // - chooseAnswer : untuk handle style jawaban yang dipilih => true / false
     // - abjad : untuk melempar value huruf tiap component
     // - jawaban : untuk melempar value isi jawaban dari data firebase 
-    
+    console.log(chooseAnswer)
     return (
         <>
             <ListGroup.Item
