@@ -2,18 +2,16 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Button, ListGroup, Image, Modal } from "react-bootstrap";
 import fire from "../../config/firebase";
 import { titleContext } from '../../config/Routes';
+import swal from "sweetalert2"
 import Countdown from 'react-countdown';
-import Swal from 'sweetalert2';
 
 const InExam = () => {
-    const [dataUser , setDataUser] = useState({})
-
     const [dataSoal, setDataSoal] = useState([]);
     const [soalTerpilih, setSoalTerpilih] = useState(0);
     const [loading, setLoading] = useState(true);
-
+    // ini ga dipake , tapi kalo dihapus / dikomen , program e ga jalan
+    const [dataLocalStorage , setLocalStorage] = useState([])
     const [showModal , setShowModal] = useState(false)
-    const [dateNow , setDateNow] = useState(undefined)
     const bidangTryout = {
         saintek: [
             {nama: "penalaran_umum" , waktu: 35},
@@ -37,12 +35,12 @@ const InExam = () => {
         ]
     }
     const [bidangTerpilih , setBidangTerpilih] = useState(0)
+    const [submisiID , setSubmisiID] = useState("")
     const namaBidang = useContext(titleContext) // namaBidang.state , namaBidang.dispatch
-    
+    const [dateNow , setDateNow] = useState(undefined)
+
+    // untuk request data soal => dilakukan setiap state loading berganti
     useEffect(() => {
-        if (localStorage.key("dataUser")) {
-            setDataUser(JSON.parse(localStorage.getItem("dataUser")))
-        }
         fire.firestore().collection("tryout").doc("8rMpLO1vfy3IzzulsQcq").collection(bidangTryout.saintek[bidangTerpilih].nama).get()
             .then(response => {
                 let temp = []
@@ -66,16 +64,34 @@ const InExam = () => {
         setDateNow(Date.now())
     }, [loading])
 
+    // request data tryout & post data field di collection submisi
+    useEffect(() => {
+        fire.firestore().collection("tryout").doc("8rMpLO1vfy3IzzulsQcq").get()
+        .then(result => {
+            fire.firestore().collection("submisi").add({
+                bidang_tryout: result.data().bidang_tryout,
+                nama_lengkap: JSON.parse(localStorage.getItem("dataUser")).displayName,
+                nama_tryout: result.data().nama_tryout,
+                nilai_matematika: "",
+                nilai_penalaran_umum: "",
+                nilai_tpa: "",
+                nilai_tps: "",
+                total_nilai: "",
+                tryout_id: result.id,
+                user_id: JSON.parse(localStorage.getItem("dataUser")).uid,
+            })
+            .then(result => setSubmisiID(result.id))
+            .catch(err => console.log("err" , err))
+        }).catch(err => console.log("err" , err))
+    }, [])
+    
     const setNamaBidang = (value) => {
         let arr = value.split("")
         let temp = ""
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i] === "_") {
-                arr[i] = " "
-            }
+            if (arr[i] === "_") arr[i] = " "
             temp += arr[i]
         }
-        
         // pake context api buat update nama bidang di navbar
         namaBidang.dispatch(kapital(temp))
     }
@@ -89,24 +105,21 @@ const InExam = () => {
 
     // fungsi untuk sort array 
     const compare = (a, b) => {
-        if (a.nomor_soal < b.nomor_soal) {
-            return -1;
-        }
-        if (a.nomor_soal > b.nomor_soal) {
-            return 1;
-        }
+        if (a.nomor_soal < b.nomor_soal) return -1;
+        if (a.nomor_soal > b.nomor_soal) return 1;
         return 0;
     }
 
     // fungsi untuk mengisi jawaban baru / mengganti jawaban
     const choosingAnswer = (answerLetter) => {
         let array = [...dataSoal]
-        
+        // jika user mengganti jawaban yang sudah pernah dipilih 
         if ( dataSoal[soalTerpilih].jawaban !== "" ) {
             dataSoal[soalTerpilih] = {
                 ...dataSoal[soalTerpilih],
                 jawaban: answerLetter
             }
+            // hanya ganti data jawaban soal terpilih yang ada di localStorage
             array[soalTerpilih].jawaban = answerLetter
         } else {
             dataSoal[soalTerpilih] = {
@@ -114,50 +127,37 @@ const InExam = () => {
                 isAnswered: true,
                 jawaban: answerLetter
             }
+            // jika user baru saja memilih jawaban , objek dataSoal soal terpilih push ke array
             array[soalTerpilih] = dataSoal[soalTerpilih]
         }
+        setLocalStorage(array)
         localStorage.setItem("jawaban" , JSON.stringify(array.sort(compare)))
     }
 
     const kirimJawaban = () => {
-        Swal.fire({
+        swal.fire({
             icon: 'warning',
-            title: 'Waktu mengerjakan subbidang ini telah selesai',
-            text: 'Silahkan mengerjakan subbidang selanjutnya',
+            title: 'Waktu untuk mengerjakan subbidang ini telah habis',
+            text: 'Silahkan melanjutkan mengerjakan subbidang selanjutnya',
         }).then(respon => {
-            if (respon.isConfirmed){
+            if (respon.isConfirmed) {
                 let jawaban
-                let uploadTask
-                if (localStorage.getItem("jawaban") !== null) {
-                    jawaban = JSON.parse(localStorage.getItem("jawaban"))
-                    let number;
-                    for (let jwb of jawaban) {
-                        number = jwb.nomor_soal
-                        if (jwb.isAnswered) {
-                            fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
-                                beban: jwb.beban ,
-                                jawaban: jwb.jawaban, 
-                                nomor_soal: jwb.nomor_soal,
-                            })
-                            .then(res => console.log(res))
-                            .catch(err => console.error(err))
-                        } else if (number) {
-                        } else {
+                localStorage.getItem("jawaban") !== null ? 
+                jawaban = JSON.parse(localStorage.getItem("jawaban")) : 
+                jawaban = [...dataSoal]
 
-                        }
-                    }
-                } else {
-                    jawaban = "tidak ada soal yang dijawab"
-                    fire.firestore().collection("jawaban").doc(dataUser.uid).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
-                        message: jawaban
-                    }).then().catch()
+                for (let jwb of jawaban) {
+                    fire.firestore().collection("submisi").doc(submisiID).collection(bidangTryout.saintek[bidangTerpilih].nama).add({
+                        jawaban: jwb.jawaban, 
+                        nomor_soal: jwb.nomor_soal,
+                    }).then().catch(err => console.log(err))
                 }
                 localStorage.removeItem("jawaban");
                 setBidangTerpilih(bidangTerpilih + 1)
                 setSoalTerpilih(0)
                 setLoading(true)
             }
-        })
+        }).catch(err => window.location.pathname = "/dashboard")
     }
 
     return (
@@ -169,7 +169,7 @@ const InExam = () => {
                     Object.keys(dataSoal).length !== 0 ? (
                         <>
                             <div className="soal w-75 p-4 border-right">
-                                <Button variant="primary" disabled={true}>Soal Nomor {dataSoal[soalTerpilih].nomor_soal}</Button>
+                                <Button variant="primary">Soal Nomor {dataSoal[soalTerpilih].nomor_soal}</Button>
                                 <br />
                                 {
                                     dataSoal[soalTerpilih].hasOwnProperty("gambar_soal") ? (
@@ -203,8 +203,7 @@ const InExam = () => {
                             <div className="nomor-soal py-4 px-4" style={{width: "310px" , height: "100vh"}}>
                                 <ListGroup.Item className="d-flex justify-content-between border px-2">
                                     <span className="m-0">Sisa Waktu</span>
-                                    {/* <Countdown date={dateNow + bidangTryout.saintek[bidangTerpilih].waktu * 60000} onComplete={() => kirimJawaban()} /> */}
-                                    {/* <Countdown date={dateNow + 5000} onComplete={() => kirimJawaban()} /> */}
+                                    <Countdown date={dateNow + 5000} onComplete={() => kirimJawaban()} />
                                 </ListGroup.Item>
 
                                 <div className="nomor mt-2">
@@ -245,7 +244,7 @@ const ListGroupItem = ({ chooseAnswer, abjad, jawaban, ...rest }) => {
     // - chooseAnswer : untuk handle style jawaban yang dipilih => true / false
     // - abjad : untuk melempar value huruf tiap component
     // - jawaban : untuk melempar value isi jawaban dari data firebase 
-    console.log(chooseAnswer)
+    
     return (
         <>
             <ListGroup.Item
