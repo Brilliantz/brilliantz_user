@@ -1,13 +1,18 @@
-import React from 'react'
+import React , {useContext} from 'react'
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import Logo from "./Logo";
 import styled from "styled-components";
 import { useHistory } from 'react-router';
+import { titleContext } from '../config/Routes';
 
 const Navbars = ({ size }) => {
     let pathname = window.location.pathname
-    let array = window.location.pathname.split("/")
     const history = useHistory()
+    // const [namaBidang , setNamaBidang] = useState("")
+    // useEffect(() => {
+    //     setNamaBidang(localStorage.getItem("nama_bidang"))
+    // } , [])
+    const examTitle = useContext(titleContext)
     return (
         <>
             {
@@ -18,7 +23,7 @@ const Navbars = ({ size }) => {
                     <Navbar bg="white" expand="lg" className="border" fixed="top">
                         {
                             // set layout saat pathname di login , register , forgot-pass , payment 
-                            pathname === "/login" || pathname === "/register" || pathname === "/forgot-pass" || typeof array[3] !== "undefined" ? (
+                            pathname === "/login" || pathname === "/register" || pathname === "/forgot-pass" || pathname === "/payment/tryout/key-tryout" ? (
                                 <CustomContainer className="d-flex justify-content-between align-items-center">
                                     <Navbar.Brand href="/"><Logo /></Navbar.Brand>
                                     {
@@ -27,7 +32,7 @@ const Navbars = ({ size }) => {
                                             <span></span>
                                         ) :
                                             // saat di payment munculkan info akun diambil dari localStorage
-                                            typeof array[3] !== "undefined" ? (
+                                            pathname === "/payment" ? (
                                                 <div className="account d-flex align-items-center justify-content-end">
                                                     <div style={{ width: '32px', height: '32px', backgroundImage: `url(${JSON.parse(localStorage.getItem("dataUser")).photoURL})`, borderRadius: '50%', backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
                                                     <span>{JSON.parse(localStorage.getItem("dataUser")).displayName}</span>
@@ -62,7 +67,7 @@ const Navbars = ({ size }) => {
                                     pathname === "/in-exam" ? (
                                         <Container className="d-flex justify-content-between">
                                             <Navbar.Brand href="/"><Logo /></Navbar.Brand>
-                                            <span style={{fontSize: "24px" , fontWeight: "bold"}}>TryOut Saintek 1 / Penalaran Umum</span>
+                                            <span style={{fontSize: "24px" , fontWeight: "bold"}}>TryOut Saintek 1 / {examTitle.state}</span>
                                             <span></span>
                                         </Container>
                                     ) : (<div></div>)
