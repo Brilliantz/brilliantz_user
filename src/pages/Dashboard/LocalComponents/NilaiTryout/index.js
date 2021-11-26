@@ -20,6 +20,18 @@ const fetchSubmission = async( userId ) => {
         tempSubmissionArray.push(submission.data());
     });
 
+    tempSubmissionArray.forEach((submission)=>{
+        let tryOutDetail = Promise.all([fetchTryOutDetail(submission.tryout_id)]);
+        tryOutDetail.then((result)=>{
+            submission.jenis_tryout = result[0].jenis_tryout
+            submission.waktu_mulai = result[0].waktu_mulai
+            submission.waktu_akhir = result[0].waktu_akhir
+        }).catch((err)=>{
+            console.log(err);
+        });
+    });
+
+
     return tempSubmissionArray;
 }
 
@@ -50,67 +62,19 @@ const NilaiTryout = ({size, dataUser}) => {
     const [submissionData , setSubmissionData] = useState();
     const [detailNilai , setDetailNilai] = useState(false);
     const [selectedDetail , setSelected] = useState(undefined);
-    const [loading , setLoading] = useState(false);
+    const [loading , setLoading] = useState(true);
 
     useEffect( () => {
-
-        // let userId = "AMX1JrbtPbM4zY4FPpPtQpptMEt2";
-
-        // (async () => {
-
-        //     const response = fire.firestore().collection("submisi").where("user_id", "==", userId );
-        //     const submissionData = await response.get();
-        
-        
-        //     let tempSubmissionArray = [];
-        
-        //     submissionData.docs.forEach((submission)=>{
-        //         tempSubmissionArray.push(submission.data());
-        //     });
-
-        //     setSubmissionData(tempSubmissionArray);
-        // })()
-
         let fetchedSubmissions = Promise.all([fetchSubmission("AMX1JrbtPbM4zY4FPpPtQpptMEt2")]);
         fetchedSubmissions.then((result)=>{
+            console.log(result);
             setSubmissionData(result);
+            setLoading(false);
         }).catch((err)=>{
             console.log(err);
         });
 
-
-
-        // fire.firestore().collection("submisi").where("user_id", "==", dataUser.uid).get()
-        // fire.firestore().collection("submisi").where("user_id", "==", "AMX1JrbtPbM4zY4FPpPtQpptMEt2").get()
-        // .then(doc => {
-        //     setLoading(false);
-            // let tempSubmissionArray = [];
-
-            // doc.docs.forEach((submission)=>{
-            //     tempSubmissionArray.push(submission.data());
-            // });
-
-        //     setSubmissionData(tempSubmissionArray); 
-        // })
-        // .catch(error => { 
-        //     console.log("error" , error) 
-        // });
-
-
-        // submissionData.forEach((submission)=>{
-
-        //     let tryOutDetail = fetchTryOutDetail(submission.tryout_id);
-
-        //     console.log(tryOutDetail);
-
-
-        //     // setSubmissionData(submissionData); 
-        // });
-
-
-    } , [])
-
-    console.log(submissionData);
+    } , [dataUser])
 
     return (
         <div>
@@ -122,12 +86,12 @@ const NilaiTryout = ({size, dataUser}) => {
                         </div>
                     ) : (
                         <ItemTable
-                            // items= { submissionData } 
-                            items={[
-                                { id: 1, tryout: 'Tryout Saintek 1', waktu_mulai: '17 Maret 2021' , waktu_akhir: '20 Maret 2021' , jenis_tryout: 'Reguler' , rata_rata: 500 },
-                                { id: 2, tryout: 'Tryout Saintek 2', waktu_mulai: '19 Juni 2021' , waktu_akhir: '24 Juni 2021' , jenis_tryout: 'Partner' , rata_rata: 600 },
-                                { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
-                            ]} 
+                            items= { submissionData[0] } 
+                            // items={[
+                            //     { id: 1, tryout: 'Tryout Saintek 1', waktu_mulai: '17 Maret 2021' , waktu_akhir: '20 Maret 2021' , jenis_tryout: 'Reguler' , rata_rata: 500 },
+                            //     { id: 2, tryout: 'Tryout Saintek 2', waktu_mulai: '19 Juni 2021' , waktu_akhir: '24 Juni 2021' , jenis_tryout: 'Partner' , rata_rata: 600 },
+                            //     { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
+                            // ]} 
                             handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
                             size={size}
                         />
@@ -222,7 +186,7 @@ const ItemTable = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item , index) => (
+                        {items.map((item , index) => ( 
                             <tr className={style.tr} key={index}>
                                 <td className={style.td}>{index+1}</td>
                                 <td className={style.td}>{item.nama_tryout}</td>

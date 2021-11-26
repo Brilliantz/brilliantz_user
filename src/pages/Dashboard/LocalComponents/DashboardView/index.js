@@ -1,7 +1,5 @@
 import React , {useState , useEffect} from 'react'
 import { Breadcrumb } from 'react-bootstrap';
-import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail, TryOutDetail} from "./LocalComponents";
-
 import {
     BrowserRouter as Router, 
     Link, 
@@ -12,6 +10,10 @@ import {
     useRouteMatch
 } from "react-router-dom";
 import fire from "../../../../config/firebase";
+
+
+import AllPrograms from './AllPrograms';
+import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail, TryOutDetail} from "./LocalComponents";
 
 const DashboardView = () => {
     const [programsData , setprogramsData] = useState([]);
@@ -38,10 +40,10 @@ const DashboardView = () => {
             <div>
                 <Router>
                     <Switch>
-                        <Route exact path={path}>
-                            <ProgramList otherPrograms={programsData} />
+                        <Route path={path}>
+                            <AllPrograms />
                         </Route>
-                        <Route exact path={`${path}/:choose`}>
+                        <Route path={`${path}/:choose`}>
                             <Content />
                         </Route>
                     </Switch>
@@ -49,13 +51,11 @@ const DashboardView = () => {
             </div>
             
         </div>
-
-        
     )
 }
 
 const Content = () => {
-    let {choose} = useParams();
+    let { choose } = useParams();
 
     return (
         <div>

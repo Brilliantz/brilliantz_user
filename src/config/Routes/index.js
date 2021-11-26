@@ -8,7 +8,7 @@ const Routes = ({size}) => {
     return (
         <Router>
             <Switch>
-                <Route exact path="/">
+                <Route path="/">
                     <Navbars size={size} />
                     <LandingPage size={size} />
                 </Route>
