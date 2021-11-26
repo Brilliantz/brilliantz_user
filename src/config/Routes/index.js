@@ -1,10 +1,16 @@
-import React from 'react'
+import React , {createContext, useState} from 'react'
 import {BrowserRouter as Router , Route , Switch} from "react-router-dom";
 import {LandingPage , Login , Register , ForgotPassword , CompleteProfile , Payment , Dashboard, InExam} from "../../pages";
 import {Navbars} from "../../components";
 import styled from "styled-components"
 
+export const titleContext = createContext()    
+
 const Routes = ({size}) => {
+    const [namaBidang , setNamaBidang] = useState("")
+    const dispatch = (namaBidangBaru) => {
+        return setNamaBidang(namaBidangBaru)
+    }
     return (
         <Router>
             <Switch>
@@ -12,42 +18,34 @@ const Routes = ({size}) => {
                     <Navbars size={size} />
                     <LandingPage size={size} />
                 </Route>
-                <Route path="/login">
+                <Route exact path="/login">
                     <Navbars size={size} />
                     <Login size={size} />
                 </Route>
-                <Route path="/register">
+                <Route exact path="/register">
                     <Navbars size={size} />
                     <Register size={size} />
                 </Route>
-                <Route path="/forgot-pass">
+                <Route exact path="/forgot-pass">
                     <Navbars size={size} />
                     <ForgotPassword />
                 </Route>
-                <Route path="/complete-profile">
+                <Route exact path="/complete-profile">
                     <Navbars size={size} />
                     <CompleteProfile size={size} />
                 </Route>
-                
-                <Route path="/payment/webinar/:key">
+                <Route path="/payment/tryout/key-tryout">
                     <Navbars size={size} />
                     <Payment size={size} container={CustomContainer} />
                 </Route>
-                <Route path="/payment/tryout/:key">
-                    <Navbars size={size} />
-                    <Payment size={size} container={CustomContainer} />
-                </Route>
-                
                 <Route path="/dashboard">
                     <Dashboard size={size} />
                 </Route>
-                {/* <Route exact path="*">
-                    {localStorage.key("dataUser") ? <Redirect to="/dashboard" /> : <Redirect to="/login" /> }
-                </Route> */}
-
                 <Route path="/in-exam">
-                    <Navbars size={size} />
-                    <InExam />
+                    <titleContext.Provider value={{ state: namaBidang , dispatch: dispatch }}>
+                        <Navbars size={size} />
+                        <InExam />
+                    </titleContext.Provider>
                 </Route>
             </Switch>
         </Router>

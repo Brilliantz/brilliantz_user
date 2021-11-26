@@ -1,9 +1,14 @@
-import React from 'react'
+import React , { useEffect } from 'react'
 import { Container } from 'react-bootstrap';
 import imageJumbotron from "../../assets/ImageJumbotron.png"
 import { Jumbotron, Program, About, Kolaborasi, Footer } from "./LocalComponents";
 
 const LandingPage = ({ size }) => {
+    useEffect(() => {
+        if (localStorage.getItem("dataUser") !== null) {
+            window.location.pathname = "/dashboard"
+        }
+    })
     return (
         <div style={{ marginTop: '80px' }}>
             <Container className="px-3">
