@@ -1,9 +1,9 @@
 import React from 'react';
 import { Breadcrumb, Card, Button} from 'react-bootstrap';
-import style from "../../../Dashboard.module.css";
+import style from "../../Dashboard.module.css";
 import styleWebinar from "./WebinarDetail.module.css";
-import { LeftArrow, Calendar , Schedule } from '../../../../../components'
-import posterWebinar from "../../../../../assets/PosterWebinar.png"
+import { LeftArrow, Calendar , Schedule } from '../../../../components'
+import posterWebinar from "../../../../assets/PosterWebinar.png"
 
 
 const WebinarDetail = () => {
@@ -14,7 +14,7 @@ const WebinarDetail = () => {
             <div className="row mt-4">
                 <div className="col">
                     <Breadcrumb  className={style.breadcrumb}>
-                        <Breadcrumb.Item href="#" >
+                        <Breadcrumb.Item onClick={() => window.location.href = "/dashboard"} >
                             DASHBOARD
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href="#" >
@@ -25,11 +25,10 @@ const WebinarDetail = () => {
             </div>
 
             <div className="row mt-4">
-                <div className="col">
+                <div className="col d-flex flex-row align-items-center">
                     <h4>
-                        <strong>
-                            <LeftArrow/> Detail Program
-                        </strong> 
+                    <Button variant="light" className="rounded" onClick={() => window.location.href = "/dashboard"}><LeftArrow /></Button> 
+                        Detail Program
                     </h4>
                 </div>
             </div>
@@ -102,7 +101,7 @@ const WebinarDetailCard = () => {
                         Zoom Media Conference
                     </p>
 
-                    <Button className="btn btn-block border-0 p-3 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = "/payment/key-tryout"}>Daftar Webinar</Button>    
+                    <Button className="btn btn-block border-0 p-3 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = `/payment/tryout/EMXBKe3SnlZc3XSz6Eym`}>Daftar Webinar</Button>    
                 </Card.Body>
             </Card>
         </>

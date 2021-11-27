@@ -14,7 +14,7 @@ const Routes = ({size}) => {
     return (
         <Router>
             <Switch>
-                <Route path="/">
+                <Route exact path="/">
                     <Navbars size={size} />
                     <LandingPage size={size} />
                 </Route>

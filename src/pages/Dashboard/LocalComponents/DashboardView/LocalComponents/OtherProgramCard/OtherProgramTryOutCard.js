@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button , Card} from 'react-bootstrap'
+import { Card} from 'react-bootstrap'
 import { Calendar } from '../../../../../../components'
 import style from "./OtherProgramCard.module.css"
 import {
@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 const OtherProgramTryoutCard = ({ tryOutDetail }) => {
-    let {path , url} = useRouteMatch();
+    let { url } = useRouteMatch();
 
     let formattedProgramFee = new Intl.NumberFormat(['ban', 'id']).format(tryOutDetail.harga);
 
@@ -36,11 +36,9 @@ const OtherProgramTryoutCard = ({ tryOutDetail }) => {
                                 </p>
                             </div>
                             <div className="col-sm text-right pt-1">
-                                {/* <Link to="#" > */}
-                                    <button id={ style.button_daftar } className="btn p-2 px-3" type="button" onClick={() => window.location.href = `/payment/tryout/${tryOutDetail.id}`}>
-                                        Daftar
-                                    </button>
-                                {/* </Link> */}
+                                <button id={ style.button_daftar } className="btn p-2 px-3" type="button" onClick={() => window.location.href = `/payment/tryout/EMXBKe3SnlZc3XSz6Eym`}>
+                                    Daftar
+                                </button>
                                 <Link to={ `${url}/tryout-detail` } >
                                     <button id={ style.button_detail } className="btn p-2 px-3" type="button">
                                         Detail

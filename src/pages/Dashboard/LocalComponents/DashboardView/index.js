@@ -2,18 +2,20 @@ import React , {useState , useEffect} from 'react'
 import { Breadcrumb } from 'react-bootstrap';
 import {
     BrowserRouter as Router, 
-    Link, 
     Route, 
     Switch , 
     useParams, 
-    useHistory, 
     useRouteMatch
 } from "react-router-dom";
 import fire from "../../../../config/firebase";
 
 
 import AllPrograms from './AllPrograms';
-import {ProgramList , ProgramDetail, ProgramBoughtList, OtherProgramList, WebinarDetail, TryOutDetail} from "./LocalComponents";
+import ProgramsBought from './ProgramsBought';
+import TryOuts from './TryOuts';
+import Webinars from './Webinars';
+import WebinarDetail from './WebinarDetail';
+import TryOutDetail from './TryOutDetail';
 
 const DashboardView = () => {
     const [programsData , setprogramsData] = useState([]);
@@ -31,8 +33,7 @@ const DashboardView = () => {
         .catch(error => { console.log("error" , error) });
     } , []);
 
-    let {path , url} = useRouteMatch();
-    const history = useHistory();
+    let {path} = useRouteMatch();
 
     return (
         <div>
@@ -40,10 +41,10 @@ const DashboardView = () => {
             <div>
                 <Router>
                     <Switch>
-                        <Route path={path}>
+                        <Route exact path={path}>
                             <AllPrograms />
                         </Route>
-                        <Route path={`${path}/:choose`}>
+                        <Route exact path={`${path}/:choose`}>
                             <Content />
                         </Route>
                     </Switch>
@@ -56,22 +57,21 @@ const DashboardView = () => {
 
 const Content = () => {
     let { choose } = useParams();
-
     return (
         <div>
             {
-                choose === "program-detail" ? (
-                    <ProgramDetail />
-                ) : choose === "program-bought" ? (
-                    <ProgramBoughtList />
-                ) : choose === "other-programs" ? (
-                    <OtherProgramList />
-                ) : choose === "webinar-detail" ? (
-                    <WebinarDetail />
+                choose === "program-bought" ? (
+                    <ProgramsBought />
+                ) : choose === "try-out" ? (
+                    <TryOuts />
+                ) : choose === "webinar" ? (
+                    <Webinars />
                 ) : choose === "tryout-detail" ? (
                     <TryOutDetail />
+                ) : choose === "webinar-detail" ? (
+                    <WebinarDetail />
                 ) : (
-                    <span>Choose</span>
+                    <AllPrograms />
                 )
             }
         </div>

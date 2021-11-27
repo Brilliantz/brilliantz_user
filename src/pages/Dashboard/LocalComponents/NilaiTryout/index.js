@@ -66,6 +66,7 @@ const NilaiTryout = ({size, dataUser}) => {
 
     useEffect( () => {
         let fetchedSubmissions = Promise.all([fetchSubmission("AMX1JrbtPbM4zY4FPpPtQpptMEt2")]);
+        // let fetchedSubmissions = Promise.all([fetchSubmission(dataUser.id)]);
         fetchedSubmissions.then((result)=>{
             console.log(result);
             setSubmissionData(result);
@@ -86,12 +87,7 @@ const NilaiTryout = ({size, dataUser}) => {
                         </div>
                     ) : (
                         <ItemTable
-                            items= { submissionData[0] } 
-                            // items={[
-                            //     { id: 1, tryout: 'Tryout Saintek 1', waktu_mulai: '17 Maret 2021' , waktu_akhir: '20 Maret 2021' , jenis_tryout: 'Reguler' , rata_rata: 500 },
-                            //     { id: 2, tryout: 'Tryout Saintek 2', waktu_mulai: '19 Juni 2021' , waktu_akhir: '24 Juni 2021' , jenis_tryout: 'Partner' , rata_rata: 600 },
-                            //     { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
-                            // ]} 
+                            items= { submissionData[0] }
                             handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
                             size={size}
                         />
