@@ -203,7 +203,13 @@ const InExam = () => {
                             <div className="nomor-soal py-4 px-4" style={{width: "310px" , height: "100vh"}}>
                                 <ListGroup.Item className="d-flex justify-content-between border px-2">
                                     <span className="m-0">Sisa Waktu</span>
-                                    <Countdown date={dateNow + 5000} onComplete={() => kirimJawaban()} />
+
+                                    {/* untuk nyoba in-exam , waktu nya 5 detik */}
+                                    {/* <Countdown date={dateNow + 5000} onComplete={() => kirimJawaban()} /> */}
+                                
+                                    {/* settingan sebenarnya yang dipakai yang ini */}
+                                    <Countdown date={dateNow + bidangTryout.saintek[bidangTerpilih].waktu * 60000} onComplete={() => kirimJawaban()} />
+                                
                                 </ListGroup.Item>
 
                                 <div className="nomor mt-2">
