@@ -48,7 +48,7 @@ const Dashboard = ({size}) => {
                                 <Logo />
                             </span>
                         </li>
-                        <List icon={DashboardIcon} title="Dashboard" path="/dashboard" isActive={linkActive} onClick={() => setLinkActive("/dashboard")} />
+                        <List icon={DashboardIcon} title="Dashboard" path="/dashboard" isActive={linkActive} onClick={() => setLinkActive("/dashboard")}/>
                         <List icon={NilaiTryoutIcon} title="Nilai TryOut" path={`${url}/nilai-tryout`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/nilai-tryout")} />
                         <List icon={RankingIcon} title="Ranking" path={`${url}/ranking`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/ranking")} />
                         <List icon={ProfilIcon} title="Profil" path={`${url}/profil`} isActive={linkActive} onClick={() => setLinkActive("/dashboard/profil")} />
@@ -133,13 +133,14 @@ const Content = ({size , dataUser}) => {
         <div style={{paddingBottom: '50px' , boxSizing: 'border-box'}}>
             {
                 choose === "nilai-tryout" ? (
-                    <NilaiTryout size={size} />
+                    <NilaiTryout size={size} dataUser={dataUser} />
                 ) : choose === "ranking" ? (
                     <Ranking />
                 ) : choose === "profil" ? (
                     <Profil size={size} dataUser={dataUser} />
                 ) : (
-                    <span>Choose</span>
+                    // <span>Choose</span>
+                    <DashboardView />
                 )
             }
         </div>

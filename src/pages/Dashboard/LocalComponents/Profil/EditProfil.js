@@ -92,12 +92,12 @@ const EditProfil = (props) => {
     const [loadingKota , setLoadingKota] = useState(false);
 
     useEffect(() => {
-        axios.get("http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
+        axios.get("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json")
         .then(response => {
             setProvinsi(response.data)
             setLoadingProvinsi(false)
             let filterProvinsi = response.data.filter(prov => prov.name === dataUser.provinsi); 
-            axios.get(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${filterProvinsi[0].id}.json`)
+            axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${filterProvinsi[0].id}.json`)
             .then(res => {
                 setKota(res.data)
             })
@@ -115,7 +115,7 @@ const EditProfil = (props) => {
             setUpdate({...update , [e.target.name] : selectedProvince[0].name})
             setDataUser({...dataUser , provinsi: selectedProvince[0].name})
             // jalankan axios untuk get data kota sesuai id provinsi terpilih
-            axios.get(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvince[0].id}.json`)
+            axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvince[0].id}.json`)
             .then(response => {
                 setKota(response.data);
                 setLoadingKota(false);

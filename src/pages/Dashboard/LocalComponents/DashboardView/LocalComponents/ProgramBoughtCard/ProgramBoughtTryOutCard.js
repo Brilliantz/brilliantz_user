@@ -41,11 +41,9 @@ const ProgramBoughtTryoutCard = ({ tryOutDetail }) => {
                                 }
                             </div>
                             <div className="col-sm text-right pt-1">
-                                <Link to="#" >
-                                    <button id={ style.button_pengerjaan } className="btn p-2 px-3" type="button">
-                                        Kerjakan
-                                    </button>
-                                </Link>
+                                <button id={ style.button_pengerjaan } onClick={() => window.location.href = "/in-exam"} className="btn p-2 px-3" type="button">
+                                    Kerjakan
+                                </button>
                                 <Link to={ `${url}/tryout-detail` } >
                                     <button id={ style.button_detail } className="btn p-2 px-3" type="button">
                                         Detail

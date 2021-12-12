@@ -1,15 +1,82 @@
-import React , {useState} from 'react';
+import React , {useEffect, useState} from 'react';
 import {Breadcrumb, Button} from "react-bootstrap"
 import { SpinnerLoader } from '../../../../components';
 import DetailNilai from './DetailNilai';
+import fire from "../../../../config/firebase";
 import "../style.css";
 import style from "./nilaiTryout.module.css";
 
-const NilaiTryout = ({size}) => {
+
+const fetchSubmission = async( userId ) => {
+
+    const response = fire.firestore().collection("submisi").where("user_id", "==", userId );
+    const submissionData = await response.get();
+
+
+    let tempSubmissionArray = [];
+
+    submissionData.docs.forEach((submission)=>{
+
+        tempSubmissionArray.push(submission.data());
+    });
+
+    tempSubmissionArray.forEach((submission)=>{
+        let tryOutDetail = Promise.all([fetchTryOutDetail(submission.tryout_id)]);
+        tryOutDetail.then((result)=>{
+            submission.jenis_tryout = result[0].jenis_tryout
+            submission.waktu_mulai = result[0].waktu_mulai
+            submission.waktu_akhir = result[0].waktu_akhir
+        }).catch((err)=>{
+            console.log(err);
+        });
+    });
+
+
+    return tempSubmissionArray;
+}
+
+const fetchTryOutDetail = async( tryOutId ) => {
+    const response = fire.firestore().collection("tryout").doc(tryOutId);
+    const tryOutDetailData = await response.get();
+
+    let monthOption = { month: 'long' };
+
+    let startDateRawFormat = new Date(tryOutDetailData.data().waktu_mulai.seconds);
+    let startDateStringFormat = startDateRawFormat.getDay() + " " + startDateRawFormat.toLocaleDateString("id-ID", monthOption) + " " + startDateRawFormat.getFullYear();
+    
+    let endDateRawFormat = new Date(tryOutDetailData.data().waktu_akhir.seconds);
+    let endDateStringFormat = endDateRawFormat.getDay() + " " + endDateRawFormat.toLocaleDateString("id-ID", monthOption) + " " + endDateRawFormat.getFullYear();
+
+    const tryOutDetails = {
+        "jenis_tryout": tryOutDetailData.data().jenis_tryout,
+        "waktu_mulai": startDateStringFormat,
+        "waktu_akhir": endDateStringFormat,
+    }
+
+    return tryOutDetails;
+}
+
+
+const NilaiTryout = ({size, dataUser}) => {
     // handle komponen detail nilai
+    const [submissionData , setSubmissionData] = useState();
     const [detailNilai , setDetailNilai] = useState(false);
     const [selectedDetail , setSelected] = useState(undefined);
-    const [loading , setLoading] = useState(false);
+    const [loading , setLoading] = useState(true);
+
+    useEffect( () => {
+        let fetchedSubmissions = Promise.all([fetchSubmission("AMX1JrbtPbM4zY4FPpPtQpptMEt2")]);
+        // let fetchedSubmissions = Promise.all([fetchSubmission(dataUser.id)]);
+        fetchedSubmissions.then((result)=>{
+            console.log(result);
+            setSubmissionData(result);
+            setLoading(false);
+        }).catch((err)=>{
+            console.log(err);
+        });
+
+    } , [dataUser])
+
     return (
         <div>
             {
@@ -20,11 +87,7 @@ const NilaiTryout = ({size}) => {
                         </div>
                     ) : (
                         <ItemTable
-                            items={[
-                                { id: 1, tryout: 'Tryout Saintek 1', waktu_mulai: '17 Maret 2021' , waktu_akhir: '20 Maret 2021' , jenis_tryout: 'Reguler' , rata_rata: 500 },
-                                { id: 2, tryout: 'Tryout Saintek 2', waktu_mulai: '19 Juni 2021' , waktu_akhir: '24 Juni 2021' , jenis_tryout: 'Partner' , rata_rata: 600 },
-                                { id: 3, tryout: 'Tryout Saintek 3', waktu_mulai: '22 Agustus 2021' , waktu_akhir: '25 Agustus 2021' , jenis_tryout: 'Reguler' , rata_rata: 300 },
-                            ]} 
+                            items= { submissionData[0] }
                             handleDetail={(value , selectedDetail) => {setDetailNilai(value); setSelected(selectedDetail)}}
                             size={size}
                         />
@@ -119,10 +182,10 @@ const ItemTable = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map((item , index) => (
+                        {items.map((item , index) => ( 
                             <tr className={style.tr} key={index}>
                                 <td className={style.td}>{index+1}</td>
-                                <td className={style.td}>{item.tryout}</td>
+                                <td className={style.td}>{item.nama_tryout}</td>
                                 <td className={style.td}>{item.waktu_mulai}</td>
                                 <td className={style.td}>{item.waktu_akhir}</td>
                                 <td className={style.td}>{item.jenis_tryout}</td>

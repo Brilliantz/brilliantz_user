@@ -1,8 +1,8 @@
 import React from 'react';
 import { Breadcrumb, Card, Button, Badge} from 'react-bootstrap';
-import style from "../../../Dashboard.module.css";
+import style from "../../Dashboard.module.css";
 import styleTryOut from "./TryOutDetail.module.css";
-import { LeftArrow, Calendar , Schedule } from '../../../../../components'
+import { LeftArrow, Calendar } from '../../../../components'
 
 
 const TryOutDetail = () => {
@@ -13,7 +13,7 @@ const TryOutDetail = () => {
             <div className="row mt-4">
                 <div className="col">
                     <Breadcrumb  className={style.breadcrumb}>
-                        <Breadcrumb.Item href="#" >
+                        <Breadcrumb.Item onClick={() => window.location.href = "/dashboard"} >
                             DASHBOARD
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href="#" >
@@ -24,11 +24,10 @@ const TryOutDetail = () => {
             </div>
 
             <div className="row mt-4">
-                <div className="col">
+                <div className="col d-flex flex-row align-items-center">
                     <h4>
-                        <strong>
-                            <LeftArrow/> Detail Program
-                        </strong> 
+                    <Button variant="light" className="rounded" onClick={() => window.location.href = "/dashboard"}><LeftArrow /></Button> 
+                        Detail Program
                     </h4>
                 </div>
             </div>
@@ -50,7 +49,7 @@ const TryOutDetailCard = () => {
                 <Card.Header className="p-0 border-0" style={{backgroundColor: 'white'}}>
                     <div className="row">
                         <div className="col p-3 ml-3" style={{borderRight: '2px solid gray'}}>
-                            <h5><strong>Judul Try Out</strong></h5>
+                            <h5><strong>Try Out 1</strong></h5>
                         </div>
                         <div className="col-sm-3">
                                 <small style={{ color:"#867A7A" }} className="text-muted">
@@ -208,7 +207,7 @@ const TryOutDetailCard = () => {
                         </div>
                     </div>
 
-                    <Button className="btn btn-block border-0 p-3 mt-4 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = "/payment/key-tryout"}>Daftar TryOut</Button>    
+                    <Button className="btn btn-block border-0 p-3 mt-4 mb-3" style={{backgroundColor: '#4A47D6'}} onClick={() => window.location.href = `/payment/tryout/EMXBKe3SnlZc3XSz6Eym`}>Daftar TryOut</Button>    
                 </Card.Body>
             </Card>
         </>

@@ -28,7 +28,7 @@ const FormComp = ({ success, handleSuccess, dataUser , size}) => {
     // get data provinsi
     useEffect(() => {
         // untuk get data provinsi dulu biar bisa ditampilin dulu 
-        axios.get('http://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+        axios.get('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
         .then(response => {
             setDataProvinsi(response.data);
             setLoadingProvinsi(false);
@@ -104,7 +104,7 @@ const FormComp = ({ success, handleSuccess, dataUser , size}) => {
             setInputs({...inputs , [e.target.name] : selectedProvince[0].name})
     
             // jalankan axios untuk get data kota sesuai id provinsi terpilih
-            axios.get(`http://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvince[0].id}.json`)
+            axios.get(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${selectedProvince[0].id}.json`)
             .then(response => {
                 setDataKota(response.data);
                 setLoadingKota(false);
