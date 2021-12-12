@@ -4,6 +4,8 @@ import { useHistory } from 'react-router'
 import {EyeClose, Slogan , EyeOpen} from "../../components";
 import fire from "../../config/firebase";
 import swal from "sweetalert2";
+import { crypt } from '../../config';
+import {AES , enc} from "crypto-js"
 
 const Register = ({size}) => {
     const [name , setName] = useState("")
@@ -28,7 +30,8 @@ const Register = ({size}) => {
                         user.updateProfile({
                             displayName: name,
                         }).then(() => {
-                            localStorage.setItem("dataUser" , JSON.stringify(user))
+                            // encrypt
+                            localStorage.setItem("dataUser" , crypt.encrypt(JSON.stringify(user)))
                             window.location.href = "/complete-profile";
                         })
                     });

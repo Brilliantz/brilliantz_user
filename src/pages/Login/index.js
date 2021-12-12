@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import { Slogan, EyeClose, EyeOpen } from "../../components";
 import fire from "../../config/firebase";
 import swal from "sweetalert2"
+import {crypt} from "../../config"
 
 const Login = ({size}) => {
     const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ const Login = ({size}) => {
         fire.auth().signInWithEmailAndPassword(email, password)
             .then(() => {
                 fire.auth().onAuthStateChanged((user) => {
-                    localStorage.setItem("dataUser" , JSON.stringify(user));
+                    localStorage.setItem("dataUser" , crypt.encrypt(JSON.stringify(user)))
                     setStatus(true);
                     // setelah get user yang aktif , cek photoURLnya di user aktif dan detail profil di firestore 
                     // kosong apa ngga kalo kosong arahkan ke /complete-profile , kalo ngga arahkan ke /dashboard
@@ -23,7 +24,7 @@ const Login = ({size}) => {
                     .then(userDetail => {
                         if ((user.photoURL === null) || (!userDetail.exists)) { window.location.href = "/complete-profile" }
                         else { window.location.href = "/dashboard" }
-                    })
+                    }).catch(err => console.log(err))
                 });
             }).catch(e => {
                 if (e.code === 'auth/user-not-found') {

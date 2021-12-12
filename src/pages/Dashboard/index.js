@@ -11,16 +11,16 @@ import {
     useParams, 
     useRouteMatch
 } from "react-router-dom";
+import {crypt} from "../../config"
 
 const Dashboard = ({size}) => {
     let {path , url} = useRouteMatch();
 
     // get data user aktif dari localStorage 
-    // get data from localStorage
     let dataUser;
     // cek jika key dataUser ada datanya , get datanya
     if (localStorage.key("dataUser") !== null) {
-        dataUser = JSON.parse(localStorage.getItem("dataUser"));
+        dataUser = JSON.parse(crypt.decrypt(localStorage.getItem("dataUser")));
     } else {
         // jika gaada langsung arahkan ke halaman login
         window.location.href = "/login";
